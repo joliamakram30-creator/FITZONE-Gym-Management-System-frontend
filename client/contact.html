@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact & Facility Location - FITZONE Cairo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/client.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="client-navbar">
+    <div class="client-nav-container">
+      <a href="../index.html" class="flex items-center gap-1">
+        <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+        <div class="brand-text">FIT<span>ZONE</span></div>
+      </a>
+
+      <ul class="client-nav-links">
+        <li><a href="../index.html" class="client-nav-link">Home</a></li>
+        <li><a href="plans.html" class="client-nav-link">Memberships</a></li>
+        <li><a href="classes.html" class="client-nav-link">Classes</a></li>
+        <li><a href="trainers.html" class="client-nav-link">Trainers</a></li>
+        <li><a href="about.html" class="client-nav-link">About</a></li>
+        <li><a href="contact.html" class="client-nav-link active">Contact</a></li>
+      </ul>
+
+      <div class="client-nav-actions" id="client-navbar-actions"></div>
+      <button class="client-mobile-toggle" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <div style="background: linear-gradient(180deg, rgba(20, 24, 34, 0.9) 0%, rgba(11, 14, 20, 1) 100%); padding: 4rem 1.5rem 3rem; text-align: center; border-bottom: 1px solid var(--border-subtle);">
+    <div style="max-width: 800px; margin: 0 auto;">
+      <div class="hero-badge"><i class="fa-solid fa-envelope text-primary"></i> Get in Touch</div>
+      <h1 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 1rem;">CONNECT WITH <span class="text-primary">FITZONE</span></h1>
+      <p style="color: var(--text-secondary); font-size: 1.05rem;">Have questions about memberships, private athletic coaching, or want to book an in-person facility tour? We're here to assist you.</p>
+    </div>
+  </div>
+
+  <!-- Contact Form & Details Section -->
+  <section class="section-wrapper">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 3rem;">
+      <!-- Contact Info Cards -->
+      <div>
+        <h2 style="font-size: 1.8rem; margin-bottom: 1.5rem;">HEADQUARTERS & FACILITY</h2>
+
+        <div style="display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 2rem;">
+          <div class="card flex items-center gap-3">
+            <div class="stat-icon-box stat-icon-orange"><i class="fa-solid fa-location-dot"></i></div>
+            <div>
+              <div class="text-muted" style="font-size: 0.78rem; text-transform: uppercase;">Location</div>
+              <div class="font-bold">Plot 42, Sector 1, North 90th St</div>
+              <div class="text-secondary" style="font-size: 0.85rem;">New Cairo, Cairo Governorate, Egypt</div>
+            </div>
+          </div>
+
+          <div class="card flex items-center gap-3">
+            <div class="stat-icon-box stat-icon-emerald"><i class="fa-solid fa-phone"></i></div>
+            <div>
+              <div class="text-muted" style="font-size: 0.78rem; text-transform: uppercase;">Reception Desk</div>
+              <div class="font-bold">+20 2 2795 4400</div>
+              <div class="text-secondary" style="font-size: 0.85rem;">Direct Line (6:00 AM – Midnight)</div>
+            </div>
+          </div>
+
+          <div class="card flex items-center gap-3">
+            <div class="stat-icon-box stat-icon-cyan"><i class="fa-brands fa-whatsapp"></i></div>
+            <div>
+              <div class="text-muted" style="font-size: 0.78rem; text-transform: uppercase;">WhatsApp Support</div>
+              <div class="font-bold">+20 100 888 9911</div>
+              <div class="text-secondary" style="font-size: 0.85rem;">Instant Messaging & Membership Concierge</div>
+            </div>
+          </div>
+
+          <div class="card flex items-center gap-3">
+            <div class="stat-icon-box stat-icon-purple"><i class="fa-solid fa-envelope"></i></div>
+            <div>
+              <div class="text-muted" style="font-size: 0.78rem; text-transform: uppercase;">Inquiries Email</div>
+              <div class="font-bold">info@fitzone-gym.com</div>
+              <div class="text-secondary" style="font-size: 0.85rem;">Corporate & Personal Training inquiries</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stylized Location Card -->
+        <div class="card" style="padding: 1.5rem; background: var(--bg-surface); border: 1px solid var(--border-medium);">
+          <div class="flex items-center justify-between" style="margin-bottom: 0.75rem;">
+            <span class="font-bold text-main"><i class="fa-solid fa-map-location-dot text-primary"></i> Easy Highway Access</span>
+            <span class="badge badge-success">Valet Available</span>
+          </div>
+          <p class="text-secondary" style="font-size: 0.85rem; line-height: 1.5;">
+            Conveniently located 5 minutes from Ring Road and 10 minutes from American University in Cairo (AUC), with complimentary underground valet parking for Gold & Annual members.
+          </p>
+        </div>
+      </div>
+
+      <!-- Functional Contact Form -->
+      <div class="card" style="padding: 2.5rem;">
+        <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #ffffff;">Send Us an Inquiry</h3>
+        <p class="text-secondary" style="font-size: 0.88rem; margin-bottom: 1.75rem;">Submissions are delivered instantly to the gym concierge.</p>
+
+        <form onsubmit="ClientApp.handleContactSubmit(event)">
+          <div class="form-group">
+            <label class="form-label" for="contact-name">Full Name</label>
+            <input type="text" id="contact-name" class="form-control" placeholder="e.g. Tarek Mansour" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="contact-email">Email Address</label>
+              <input type="email" id="contact-email" class="form-control" placeholder="tarek@example.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="contact-phone">Phone Number</label>
+              <input type="tel" id="contact-phone" class="form-control" placeholder="+20 100 ..." required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="contact-subject">Inquiry Subject</label>
+            <select id="contact-subject" class="form-select">
+              <option value="Membership Plans">Membership Plans & Pricing</option>
+              <option value="Personal Training">Personal Athletic Coaching</option>
+              <option value="Class Reservation">Group Classes & Timetable</option>
+              <option value="Facility Tour">Private Facility Tour</option>
+              <option value="Corporate Wellness">Corporate Partnership</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="contact-message">Message</label>
+            <textarea id="contact-message" class="form-control" rows="4" placeholder="How can our fitness team assist you?" required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-full" style="padding: 0.8rem; font-size: 1rem;">
+            <i class="fa-solid fa-paper-plane"></i> Submit Message
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="client-footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="flex items-center gap-1" style="margin-bottom: 1rem;">
+          <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+          <div class="brand-text">FIT<span>ZONE</span></div>
+        </div>
+        <p style="font-size: 0.9rem; line-height: 1.6;">Premier Luxury Fitness & Wellness Cairo.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <ul class="footer-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="plans.html">Membership Plans</a></li>
+          <li><a href="classes.html">Classes Schedule</a></li>
+          <li><a href="trainers.html">Trainers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Member Services</h4>
+        <ul class="footer-links">
+          <li><a href="../login.html">Login</a></li>
+          <li><a href="../register.html">Register Online</a></li>
+          <li><a href="my-dashboard.html">Member Portal</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Location</h4>
+        <p style="font-size: 0.88rem; line-height: 1.7; color: var(--text-secondary);">
+          Plot 42, North 90th St, New Cairo, Egypt
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2024 FITZONE Luxury Fitness. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/client.js"></script>
+</body>
+</html>

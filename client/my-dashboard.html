@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Portal & Digital Pass - FITZONE</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/client.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <!-- Chart.js for member progress tracker -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- QRCode.js for member pass -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="client-navbar">
+    <div class="client-nav-container">
+      <a href="../index.html" class="flex items-center gap-1">
+        <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+        <div class="brand-text">FIT<span>ZONE</span></div>
+      </a>
+
+      <ul class="client-nav-links">
+        <li><a href="../index.html" class="client-nav-link">Home</a></li>
+        <li><a href="plans.html" class="client-nav-link">Memberships</a></li>
+        <li><a href="classes.html" class="client-nav-link">Classes</a></li>
+        <li><a href="trainers.html" class="client-nav-link">Trainers</a></li>
+        <li><a href="my-dashboard.html" class="client-nav-link active">My Portal</a></li>
+        <li><a href="profile.html" class="client-nav-link">Profile</a></li>
+      </ul>
+
+      <div class="client-nav-actions" id="client-navbar-actions"></div>
+      <button class="client-mobile-toggle" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <!-- Main Member Portal Content -->
+  <main class="section-wrapper" style="padding-top: 2.5rem;">
+
+    <!-- Welcome & Membership Banner -->
+    <div class="portal-header-banner">
+      <div>
+        <div class="flex items-center gap-2" style="margin-bottom: 0.5rem;">
+          <h1 style="font-size: 1.85rem; font-weight: 800; margin: 0;">Welcome, <span id="portal-user-name" class="text-primary">Member</span>!</h1>
+          <span id="portal-status-badge"></span>
+        </div>
+        <div class="text-secondary" style="font-size: 0.95rem;">
+          Plan: <strong id="portal-plan-name" class="text-main">Pro Fitness</strong> • <span id="portal-days-remaining"></span>
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <a href="plans.html" class="btn btn-primary btn-sm">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Renew / Upgrade Plan
+        </a>
+        <a href="classes.html" class="btn btn-outline btn-sm">
+          <i class="fa-solid fa-calendar-plus"></i> Book a Class
+        </a>
+      </div>
+    </div>
+
+    <!-- Top Grid: Digital Pass & Today's Workout -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2rem; margin-bottom: 2.5rem;">
+      
+      <!-- Holographic Digital Membership Card -->
+      <div class="digital-membership-card">
+        <div class="digital-card-top">
+          <div class="flex items-center gap-1">
+            <i class="fa-solid fa-bolt text-primary" style="font-size: 1.2rem;"></i>
+            <span class="digital-card-brand">FIT<span class="text-primary">ZONE</span> PASS</span>
+          </div>
+          <span class="badge badge-primary font-mono" id="card-member-plan">PRO ACCESS</span>
+        </div>
+
+        <div class="digital-card-qr-box">
+          <div id="card-qr-code" class="qr-code-display"></div>
+          <div class="digital-card-details">
+            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px;">Member ID</div>
+            <div class="digital-card-num" id="card-member-id">FZ-1001</div>
+            
+            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-top: 0.5rem;">Cardholder</div>
+            <div class="digital-card-holder" id="card-member-name">AHMED MANSOUR</div>
+          </div>
+        </div>
+
+        <div class="digital-card-dates">
+          <div><i class="fa-solid fa-circle-check text-success"></i> Valid at Reception Scanner</div>
+          <div>Expires: <strong id="card-member-exp" class="text-main">2025-01-01</strong></div>
+        </div>
+      </div>
+
+      <!-- Today's Workout Checklist -->
+      <div class="card" style="display: flex; flex-direction: column;">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-dumbbell text-primary"></i>
+            <div>
+              <div>Today's Assigned Workout</div>
+              <div id="portal-workout-title" style="font-size: 0.78rem; color: var(--text-muted); font-weight: 500;">Routine</div>
+            </div>
+          </div>
+          <span class="badge badge-success"><i class="fa-solid fa-check"></i> Interactive</span>
+        </div>
+
+        <div id="portal-workout-container" style="flex: 1; max-height: 280px; overflow-y: auto;">
+          <!-- Loaded dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Middle Grid: Fitness Progress Chart & Booked Classes -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2rem; margin-bottom: 2.5rem;">
+      
+      <!-- Fitness Progress Tracker Chart -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-chart-line text-primary"></i> Fitness Progress & Weight Tracker
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="ClientApp.openLogMeasurementModal()">
+            <i class="fa-solid fa-plus"></i> Log Measurement
+          </button>
+        </div>
+
+        <div style="height: 250px; position: relative;">
+          <canvas id="client-progress-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- My Upcoming Booked Classes -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-calendar-check text-primary"></i> My Class Reservations
+          </div>
+          <a href="classes.html" class="btn btn-outline btn-sm">Explore Classes</a>
+        </div>
+
+        <div id="portal-booked-classes-container">
+          <!-- Loaded dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Section: Attendance History & Invoices -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+      
+      <!-- Attendance Log -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-clock-rotate-left text-primary"></i> My Attendance History
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table" style="font-size: 0.85rem;">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Check In</th>
+                <th>Check Out</th>
+                <th>Duration</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="portal-attendance-tbody">
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Payment & Receipts -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-receipt text-primary"></i> Payment & Invoices History
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table" style="font-size: 0.85rem;">
+            <thead>
+              <tr>
+                <th>Invoice #</th>
+                <th>Plan</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="portal-payments-tbody">
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modal: Log Body Measurements -->
+  <div class="modal" id="log-measurement-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-weight-scale text-primary"></i> Log Body Measurements</h3>
+        <button class="modal-close" onclick="App.closeModal('log-measurement-modal')">&times;</button>
+      </div>
+      <form onsubmit="ClientApp.saveMeasurement(event)">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date</label>
+              <input type="date" id="log-measure-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Weight (kg)</label>
+              <input type="number" step="0.1" id="log-measure-weight" class="form-control" placeholder="e.g. 81.5" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Height (cm)</label>
+              <input type="number" id="log-measure-height" class="form-control" placeholder="178">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Body Fat %</label>
+              <input type="number" step="0.1" id="log-measure-bodyfat" class="form-control" placeholder="e.g. 17.5">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Chest (cm)</label>
+              <input type="number" step="0.5" id="log-measure-chest" class="form-control" placeholder="105">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Waist (cm)</label>
+              <input type="number" step="0.5" id="log-measure-waist" class="form-control" placeholder="85">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Arms (cm)</label>
+              <input type="number" step="0.5" id="log-measure-arms" class="form-control" placeholder="38.5">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="App.closeModal('log-measurement-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Entry</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="client-footer">
+    <div class="footer-bottom" style="border: none; padding: 0;">
+      <div>&copy; 2024 FITZONE Luxury Fitness & Wellness. Member Account Center.</div>
+      <div class="flex gap-3">
+        <a href="profile.html">Edit Profile</a>
+        <a href="contact.html">Gym Helpdesk</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/client.js"></script>
+</body>
+</html>

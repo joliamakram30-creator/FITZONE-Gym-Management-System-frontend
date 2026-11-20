@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings & System Configuration - FITZONE Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="admin-layout">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <div class="brand-text">FIT<span>ZONE</span></div>
+        <span class="brand-sub">Management Suite</span>
+      </div>
+    </div>
+
+    <div class="sidebar-menu">
+      <div class="sidebar-section-title">Core Management</div>
+      <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+      <a href="members.html" class="sidebar-link"><i class="fa-solid fa-users"></i> Members</a>
+      <a href="memberships.html" class="sidebar-link"><i class="fa-solid fa-id-card"></i> Memberships</a>
+      <a href="attendance.html" class="sidebar-link"><i class="fa-solid fa-clock-rotate-left"></i> Attendance</a>
+
+      <div class="sidebar-section-title">Operations & Fitness</div>
+      <a href="trainers.html" class="sidebar-link"><i class="fa-solid fa-user-tie"></i> Trainers</a>
+      <a href="workouts.html" class="sidebar-link"><i class="fa-solid fa-dumbbell"></i> Workout Plans</a>
+      <a href="classes.html" class="sidebar-link"><i class="fa-solid fa-calendar-days"></i> Classes & Booking</a>
+      <a href="equipment.html" class="sidebar-link"><i class="fa-solid fa-wrench"></i> Equipment</a>
+
+      <div class="sidebar-section-title">Finance & Intelligence</div>
+      <a href="payments.html" class="sidebar-link"><i class="fa-solid fa-receipt"></i> Payments & Billing</a>
+      <a href="reports.html" class="sidebar-link"><i class="fa-solid fa-chart-pie"></i> Reports & Analytics</a>
+      <a href="notifications.html" class="sidebar-link"><i class="fa-solid fa-bell"></i> Notifications</a>
+      <a href="settings.html" class="sidebar-link active"><i class="fa-solid fa-gear"></i> Settings</a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="sidebar-user-avatar admin-display-avatar" alt="Admin">
+        <div style="flex: 1; overflow: hidden;">
+          <div class="sidebar-user-name admin-display-name text-truncate">Administrator</div>
+          <div class="sidebar-user-role">Super Admin</div>
+        </div>
+        <button class="btn btn-outline btn-sm btn-icon" title="Logout" onclick="AdminUI.logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Body Content -->
+  <div class="admin-main">
+    <header class="admin-header">
+      <div class="header-left">
+        <button class="mobile-menu-toggle" aria-label="Toggle Navigation"><i class="fa-solid fa-bars"></i></button>
+        <div class="header-title-box">
+          <h1>Facility Settings & Brand Parameters</h1>
+          <p>Configure gym contact details, currency, tax rates, and administration security</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <button class="btn btn-outline btn-sm text-danger" onclick="AdminUI.confirmResetDemo()">
+          <i class="fa-solid fa-rotate-left"></i> Reset Demo Database
+        </button>
+      </div>
+    </header>
+
+    <main class="admin-content" style="max-width: 900px;">
+
+      <!-- Gym Facility Parameters -->
+      <div class="card" style="margin-bottom: 2rem;">
+        <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; color: #ffffff;"><i class="fa-solid fa-building text-primary"></i> General Facility Information</h3>
+
+        <form onsubmit="handleSaveGymSettings(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Gym Legal Name *</label>
+              <input type="text" id="set-gym-name" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Brand Short Name</label>
+              <input type="text" id="set-short-name" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Contact Email *</label>
+              <input type="email" id="set-email" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Direct Phone Line *</label>
+              <input type="tel" id="set-phone" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">WhatsApp Concierge</label>
+              <input type="tel" id="set-whatsapp" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Facility Physical Address</label>
+            <input type="text" id="set-address" class="form-control" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Operating Working Hours</label>
+              <input type="text" id="set-hours" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Currency Symbol</label>
+              <input type="text" id="set-currency" class="form-control" value="EGP" readonly style="opacity: 0.7;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">VAT Tax Rate (%)</label>
+              <input type="number" id="set-tax" class="form-control" value="14" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">
+            <i class="fa-solid fa-floppy-disk"></i> Update Facility Parameters
+          </button>
+        </form>
+      </div>
+
+      <!-- Admin Credentials & Security -->
+      <div class="card" style="margin-bottom: 2rem;">
+        <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; color: #ffffff;"><i class="fa-solid fa-user-shield text-primary"></i> Super Admin Credentials</h3>
+
+        <form onsubmit="handleSaveAdminAccount(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Administrator Name</label>
+              <input type="text" id="set-admin-name" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Admin Login Email</label>
+              <input type="email" id="set-admin-email" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">New Password</label>
+              <input type="password" id="set-admin-pass1" class="form-control" placeholder="Leave blank to keep current">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Confirm Password</label>
+              <input type="password" id="set-admin-pass2" class="form-control" placeholder="Repeat new password">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-secondary">
+            <i class="fa-solid fa-key"></i> Update Admin Account
+          </button>
+        </form>
+      </div>
+
+      <!-- Factory Reset Danger Zone -->
+      <div class="card" style="border: 1px dashed var(--danger); background: rgba(239, 68, 68, 0.03);">
+        <h3 class="text-danger" style="font-size: 1.25rem; margin-bottom: 0.5rem;"><i class="fa-solid fa-triangle-exclamation"></i> Danger Zone: Demo Data Reset</h3>
+        <p class="text-secondary" style="font-size: 0.88rem; line-height: 1.5; margin-bottom: 1.25rem;">
+          Restores default factory demonstration dataset (20 members, 5 trainers, 4 plans, 15 attendance, 10 payments, 6 classes, workouts, notifications). Custom members added during your testing will be replaced.
+        </p>
+
+        <button type="button" class="btn btn-danger" onclick="AdminUI.confirmResetDemo()">
+          <i class="fa-solid fa-rotate-left"></i> Restore Default Seed Data
+        </button>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSettings();
+    });
+
+    function loadSettings() {
+      const s = DB.getSettings();
+      document.getElementById('set-gym-name').value = s.gymName || '';
+      document.getElementById('set-short-name').value = s.shortName || '';
+      document.getElementById('set-email').value = s.email || '';
+      document.getElementById('set-phone').value = s.phone || '';
+      document.getElementById('set-whatsapp').value = s.whatsapp || '';
+      document.getElementById('set-address').value = s.address || '';
+      document.getElementById('set-hours').value = s.workingHours || '';
+      document.getElementById('set-currency').value = s.currency || 'EGP';
+      document.getElementById('set-tax').value = s.taxRate || 14;
+
+      const user = Auth.getCurrentUser();
+      if (user) {
+        document.getElementById('set-admin-name').value = user.name || '';
+        document.getElementById('set-admin-email').value = user.email || '';
+      }
+    }
+
+    function handleSaveGymSettings(e) {
+      e.preventDefault();
+      const updates = {
+        gymName: document.getElementById('set-gym-name').value.trim(),
+        shortName: document.getElementById('set-short-name').value.trim(),
+        email: document.getElementById('set-email').value.trim(),
+        phone: document.getElementById('set-phone').value.trim(),
+        whatsapp: document.getElementById('set-whatsapp').value.trim(),
+        address: document.getElementById('set-address').value.trim(),
+        workingHours: document.getElementById('set-hours').value.trim(),
+        taxRate: parseFloat(document.getElementById('set-tax').value) || 14
+      };
+
+      DB.updateSettings(updates);
+      App.showToast("Gym settings saved successfully!", "success");
+    }
+
+    function handleSaveAdminAccount(e) {
+      e.preventDefault();
+      const user = Auth.getCurrentUser();
+      if (!user) return;
+
+      const name = document.getElementById('set-admin-name').value.trim();
+      const email = document.getElementById('set-admin-email').value.trim();
+      const p1 = document.getElementById('set-admin-pass1').value;
+      const p2 = document.getElementById('set-admin-pass2').value;
+
+      if (p1) {
+        if (p1 !== p2) {
+          App.showToast("New passwords do not match.", "error");
+          return;
+        }
+        DB.update('users', user.id, { password: p1 });
+      }
+
+      DB.update('users', user.id, { name, email });
+      user.name = name;
+      user.email = email;
+      Auth.setSession(user);
+
+      App.showToast("Admin account credentials updated!", "success");
+      setTimeout(() => window.location.reload(), 600);
+    }
+  </script>
+</body>
+</html>

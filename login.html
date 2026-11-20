@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - FITZONE Luxury Gym Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+      background: linear-gradient(135deg, #060810 0%, #0f131f 100%),
+                  url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1600&auto=format&fit=crop&q=80') center/cover no-repeat;
+      background-blend-mode: multiply;
+    }
+
+    .auth-bg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 50% 35%, rgba(255, 94, 20, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .auth-container {
+      width: 100%;
+      max-width: 480px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-box {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 94, 20, 0.2);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 94, 20, 0.1);
+      animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .auth-brand {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .brand-logo-icon {
+      animation: logoPulse 3s ease-in-out infinite;
+    }
+
+    .demo-selector-box {
+      background: rgba(255, 94, 20, 0.07);
+      border: 1px solid rgba(255, 94, 20, 0.25);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .demo-selector-box .demo-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.6rem;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(255, 94, 20, 0.15);
+    }
+
+    .btn-signin {
+      width: 100%;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 0.85rem;
+      margin-top: 1rem;
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    @keyframes logoPulse {
+      0%, 100% {
+        box-shadow: 0 4px 16px rgba(255, 94, 20, 0.4);
+      }
+      50% {
+        box-shadow: 0 4px 32px rgba(255, 94, 20, 0.7);
+      }
+    }
+  </style>
+</head>
+<body class="auth-page">
+
+  <div class="auth-bg-overlay"></div>
+
+  <div class="auth-container">
+    <div class="auth-box">
+      <div class="auth-brand">
+        <div class="brand-logo-icon" style="margin: 0 auto 0.75rem; width: 48px; height: 48px; font-size: 1.5rem;">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <h2 style="font-size: 1.6rem; letter-spacing: 0.5px;">FIT<span class="text-primary">ZONE</span></h2>
+        <p class="text-secondary" style="font-size: 0.85rem; margin-top: 0.2rem;">Gym Management & Member Portal</p>
+      </div>
+
+      <!-- Quick 1-Click Demo Login Selector -->
+      <div class="demo-selector-box">
+        <div class="demo-title">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Instant Demo Login
+        </div>
+        <div class="flex gap-2">
+          <button type="button" class="btn btn-secondary btn-sm flex-1" onclick="handleQuickLogin('admin')">
+            <i class="fa-solid fa-shield-halved text-primary"></i> Admin Demo
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm flex-1" onclick="handleQuickLogin('client')">
+            <i class="fa-solid fa-user text-info"></i> Member Demo
+          </button>
+        </div>
+      </div>
+
+      <form id="login-form" onsubmit="handleFormLogin(event)">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email Address</label>
+          <div style="position: relative;">
+            <input type="email" id="login-email" class="form-control" placeholder="name@fitzone.com" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="flex justify-between items-center" style="margin-bottom: 0.4rem;">
+            <label class="form-label" for="login-password" style="margin: 0;">Password</label>
+            <a href="#" onclick="alert('Demo passwords: Admin is admin123, Member is member123'); return false;" class="text-muted" style="font-size: 0.78rem;">Forgot password?</a>
+          </div>
+          <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-signin">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle); font-size: 0.88rem; color: var(--text-secondary);">
+        Don't have an account? <a href="register.html" class="text-primary font-bold">Register as Member</a>
+      </div>
+
+      <div style="text-align: center; margin-top: 1rem;">
+        <a href="index.html" class="text-muted" style="font-size: 0.82rem;"><i class="fa-solid fa-arrow-left"></i> Back to FITZONE Website</a>
+      </div>
+    </div>
+
+    <!-- Decorative branding footer -->
+    <div style="text-align:center; margin-top:2rem; font-size:0.78rem; color:rgba(255,255,255,0.3); letter-spacing:1px; text-transform:uppercase;">
+      © 2024 FITZONE — Premium Gym Management
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function handleFormLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const pass = document.getElementById('login-password').value;
+
+      const res = Auth.login(email, pass);
+      if (res.success) {
+        App.showToast(`Welcome back, ${res.user.name}!`, "success");
+        setTimeout(() => {
+          if (res.user.role === 'admin') {
+            window.location.href = 'admin/dashboard.html';
+          } else {
+            window.location.href = 'client/my-dashboard.html';
+          }
+        }, 600);
+      } else {
+        App.showToast(res.message, "error");
+      }
+    }
+
+    function handleQuickLogin(role) {
+      const res = Auth.quickLogin(role);
+      if (res.success) {
+        App.showToast(`Logged in as ${role === 'admin' ? 'Administrator' : 'Gym Member'}!`, "success");
+        setTimeout(() => {
+          if (res.user.role === 'admin') {
+            window.location.href = 'admin/dashboard.html';
+          } else {
+            window.location.href = 'client/my-dashboard.html';
+          }
+        }, 400);
+      }
+    }
+  </script>
+</body>
+</html>

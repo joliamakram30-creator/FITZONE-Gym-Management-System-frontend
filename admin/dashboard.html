@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard Overview - FITZONE</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body class="admin-layout">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <div class="brand-text">FIT<span>ZONE</span></div>
+        <span class="brand-sub">Management Suite</span>
+      </div>
+    </div>
+
+    <div class="sidebar-menu">
+      <div class="sidebar-section-title">Core Management</div>
+      <a href="dashboard.html" class="sidebar-link active">
+        <i class="fa-solid fa-gauge-high"></i> Dashboard
+      </a>
+      <a href="members.html" class="sidebar-link">
+        <i class="fa-solid fa-users"></i> Members
+      </a>
+      <a href="memberships.html" class="sidebar-link">
+        <i class="fa-solid fa-id-card"></i> Memberships
+      </a>
+      <a href="attendance.html" class="sidebar-link">
+        <i class="fa-solid fa-clock-rotate-left"></i> Attendance
+      </a>
+
+      <div class="sidebar-section-title">Operations & Fitness</div>
+      <a href="trainers.html" class="sidebar-link">
+        <i class="fa-solid fa-user-tie"></i> Trainers
+      </a>
+      <a href="workouts.html" class="sidebar-link">
+        <i class="fa-solid fa-dumbbell"></i> Workout Plans
+      </a>
+      <a href="classes.html" class="sidebar-link">
+        <i class="fa-solid fa-calendar-days"></i> Classes & Booking
+      </a>
+      <a href="equipment.html" class="sidebar-link">
+        <i class="fa-solid fa-wrench"></i> Equipment
+      </a>
+
+      <div class="sidebar-section-title">Finance & Intelligence</div>
+      <a href="payments.html" class="sidebar-link">
+        <i class="fa-solid fa-receipt"></i> Payments & Billing
+      </a>
+      <a href="reports.html" class="sidebar-link">
+        <i class="fa-solid fa-chart-pie"></i> Reports & Analytics
+      </a>
+      <a href="notifications.html" class="sidebar-link">
+        <i class="fa-solid fa-bell"></i> Notifications
+      </a>
+      <a href="settings.html" class="sidebar-link">
+        <i class="fa-solid fa-gear"></i> Settings
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="sidebar-user-avatar admin-display-avatar" alt="Admin">
+        <div style="flex: 1; overflow: hidden;">
+          <div class="sidebar-user-name admin-display-name text-truncate">Administrator</div>
+          <div class="sidebar-user-role">Super Admin</div>
+        </div>
+        <button class="btn btn-outline btn-sm btn-icon" title="Logout" onclick="AdminUI.logout()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Body Content -->
+  <div class="admin-main">
+    <!-- Topbar Header -->
+    <header class="admin-header">
+      <div class="header-left">
+        <button class="mobile-menu-toggle" aria-label="Toggle Navigation"><i class="fa-solid fa-bars"></i></button>
+        <div class="header-title-box">
+          <h1>Operations Control Center</h1>
+          <p>Real-time performance metrics and gym attendance</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Global Search Input -->
+        <div class="header-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="global-admin-search" class="form-control" placeholder="Search members, IDs...">
+        </div>
+
+        <!-- Shortcut to Client Website -->
+        <a href="../index.html" class="btn btn-secondary btn-sm" target="_blank" title="View Public Website">
+          <i class="fa-solid fa-globe text-primary"></i> <span class="hide-mobile">Public Site</span>
+        </a>
+
+        <!-- Notifications Dropdown Popover -->
+        <div class="notif-dropdown-wrapper">
+          <button class="notif-btn" onclick="AdminUI.toggleNotifications(event)" aria-label="Notifications">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-badge-count" id="admin-notif-count" style="display: none;">0</span>
+          </button>
+          
+          <div class="notif-popover" id="admin-notif-popover">
+            <div class="notif-popover-header">
+              <h4>System Notifications</h4>
+              <button class="btn btn-outline btn-sm" onclick="AdminUI.markAllNotificationsRead()" style="padding: 0.2rem 0.6rem; font-size: 0.72rem;">Mark Read</button>
+            </div>
+            <div class="notif-popover-list" id="admin-notif-list">
+              <!-- Populated dynamically -->
+            </div>
+            <div class="notif-popover-footer">
+              <a href="notifications.html" class="text-primary font-bold" style="font-size: 0.8rem;">View All Notifications &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Demo Reset Data Button -->
+        <button class="btn btn-outline btn-sm" title="Reset Demo Data" onclick="AdminUI.confirmResetDemo()">
+          <i class="fa-solid fa-rotate-left"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="admin-content">
+
+      <!-- Quick Action Shortcuts Bar -->
+      <div class="flex items-center justify-between flex-wrap gap-2" style="margin-bottom: 2rem; background: var(--bg-card); padding: 1rem 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--border-subtle);">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-main"><i class="fa-solid fa-bolt text-primary"></i> Quick Operations:</span>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <button class="btn btn-primary btn-sm" onclick="window.location.href='attendance.html'">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Fast Check-In
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="window.location.href='members.html?action=new'">
+            <i class="fa-solid fa-user-plus"></i> New Member
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="window.location.href='payments.html?action=new'">
+            <i class="fa-solid fa-money-bill-wave"></i> Record Payment
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="window.location.href='classes.html?action=new'">
+            <i class="fa-solid fa-calendar-plus"></i> Schedule Class
+          </button>
+        </div>
+      </div>
+
+      <!-- 8 Key Statistics Cards Grid (Calculated strictly from LocalStorage DB) -->
+      <div class="stats-grid">
+        <!-- 1. Total Members -->
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Total Members</div>
+            <div class="stat-info-val" id="dash-stat-total-members">--</div>
+            <div class="stat-trend positive"><i class="fa-solid fa-arrow-trend-up"></i> Registered on system</div>
+          </div>
+          <div class="stat-icon-box stat-icon-orange"><i class="fa-solid fa-users"></i></div>
+        </div>
+
+        <!-- 2. Active Members -->
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Active Members</div>
+            <div class="stat-info-val text-success" id="dash-stat-active-members">--</div>
+            <div class="stat-trend positive"><i class="fa-solid fa-circle-check"></i> Valid access passes</div>
+          </div>
+          <div class="stat-icon-box stat-icon-emerald"><i class="fa-solid fa-user-check"></i></div>
+        </div>
+
+        <!-- 3. Expired Memberships -->
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Expired Memberships</div>
+            <div class="stat-info-val text-danger" id="dash-stat-expired-members">--</div>
+            <div class="stat-trend negative"><i class="fa-solid fa-clock"></i> Requires renewal</div>
+          </div>
+          <div class="stat-icon-box stat-icon-rose"><i class="fa-solid fa-user-xmark"></i></div>
+        </div>
+
+        <!-- 4. New This Month -->
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">New This Month</div>
+            <div class="stat-info-val" id="dash-stat-new-members">--</div>
+            <div class="stat-trend positive"><i class="fa-solid fa-plus"></i> Enrollment growth</div>
+          </div>
+          <div class="stat-icon-box stat-icon-purple"><i class="fa-solid fa-user-plus"></i></div>
+        </div>
+
+        <!-- 5. Today's Attendance -->
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Today's Visits</div>
+            <div class="stat-info-val" id="dash-stat-today-attendance">--</div>
+            <div class="stat-trend positive"><span id="dash-stat-active-inside-badge" class="font-bold text-primary">3 currently inside</span></div>
+          </div>
+          <div class="stat-icon-box stat-icon-cyan"><i class="fa-solid fa-dumbbell"></i></div>
+        </div>
+
+        <!-- 6. Monthly Revenue -->
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Monthly Revenue</div>
+            <div class="stat-info-val" id="dash-stat-monthly-revenue" style="font-size: 1.5rem;">--</div>
+            <div class="stat-trend positive"><i class="fa-solid fa-coins"></i> Total collections</div>
+          </div>
+          <div class="stat-icon-box stat-icon-emerald"><i class="fa-solid fa-sack-dollar"></i></div>
+        </div>
+
+        <!-- 7. Pending Payments -->
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Pending Invoices</div>
+            <div class="stat-info-val text-warning" id="dash-stat-pending-payments" style="font-size: 1.5rem;">--</div>
+            <div class="stat-trend neutral"><i class="fa-solid fa-receipt"></i> Outstanding balance</div>
+          </div>
+          <div class="stat-icon-box stat-icon-amber"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+        </div>
+
+        <!-- 8. Active Trainers -->
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Master Trainers</div>
+            <div class="stat-info-val" id="dash-stat-active-trainers">--</div>
+            <div class="stat-trend positive"><i class="fa-solid fa-award"></i> On floor & classes</div>
+          </div>
+          <div class="stat-icon-box stat-icon-orange"><i class="fa-solid fa-user-tie"></i></div>
+        </div>
+      </div>
+
+      <!-- Charts Section: 4 Interactive Charts -->
+      <div class="charts-grid">
+        <!-- Monthly Revenue Chart -->
+        <div class="chart-card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-chart-column text-primary"></i> Monthly Revenue (EGP)</div>
+            <span class="badge badge-primary font-mono">Current Year</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chart-monthly-revenue"></canvas>
+          </div>
+        </div>
+
+        <!-- Membership Plan Distribution Chart -->
+        <div class="chart-card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-chart-pie text-primary"></i> Plan Breakdown</div>
+            <span class="badge badge-secondary">Active Plans</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chart-plan-distribution"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <!-- Membership Growth Chart -->
+        <div class="chart-card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-chart-line text-success"></i> Membership Growth Trend</div>
+            <span class="badge badge-success">+18% MoM</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chart-membership-growth"></canvas>
+          </div>
+        </div>
+
+        <!-- Attendance Peak Statistics Chart -->
+        <div class="chart-card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-clock text-info"></i> Daily Peak Hours</div>
+            <span class="badge badge-info">Gym Traffic</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chart-attendance-stats"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Layout: Latest Registered Members & Expiring Memberships -->
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem;" class="bottom-dash-grid">
+        <!-- Latest Registered Members Table -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-user-plus text-primary"></i> Latest Registered Members</div>
+            <a href="members.html" class="btn btn-outline btn-sm">View All Members</a>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table" style="font-size: 0.85rem;">
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th>Plan</th>
+                  <th>Joined Date</th>
+                  <th>Status</th>
+                  <th class="text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="dash-latest-members-tbody">
+                <!-- Injected dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Upcoming Expirations Alert Panel -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-triangle-exclamation text-warning"></i> Expirations Alert</div>
+            <span class="badge badge-warning" id="dash-expiring-count-badge">0</span>
+          </div>
+
+          <p class="text-secondary" style="font-size: 0.82rem; margin-bottom: 1rem;">Members whose subscriptions expire within 7 days or are currently expired:</p>
+          <div id="dash-expiring-list" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 280px; overflow-y: auto;">
+            <!-- Injected dynamically -->
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initDashboardStats();
+      initDashboardCharts();
+      initDashboardTables();
+    });
+
+    function initDashboardStats() {
+      const members = DB.get('members');
+      const attendance = DB.get('attendance');
+      const payments = DB.get('payments');
+      const trainers = DB.get('trainers');
+      const today = new Date().toISOString().split('T')[0];
+
+      // 1. Total Members
+      document.getElementById('dash-stat-total-members').textContent = members.length;
+
+      // 2. Active Members
+      const activeMembers = members.filter(m => m.status === 'Active');
+      document.getElementById('dash-stat-active-members').textContent = activeMembers.length;
+
+      // 3. Expired Members
+      const expiredMembers = members.filter(m => m.status === 'Expired');
+      document.getElementById('dash-stat-expired-members').textContent = expiredMembers.length;
+
+      // 4. New This Month
+      const currentMonthPrefix = today.slice(0, 7);
+      const newThisMonth = members.filter(m => m.registrationDate && m.registrationDate.startsWith(currentMonthPrefix)).length;
+      document.getElementById('dash-stat-new-members').textContent = newThisMonth;
+
+      // 5. Today's Attendance
+      const todayVisits = attendance.filter(a => a.date === today);
+      const activeInside = todayVisits.filter(a => a.status === 'Checked In').length;
+      document.getElementById('dash-stat-today-attendance').textContent = todayVisits.length;
+      document.getElementById('dash-stat-active-inside-badge').textContent = `${activeInside} currently inside`;
+
+      // 6. Monthly Revenue & 7. Pending
+      let totalRevenue = 0;
+      let pendingRevenue = 0;
+      payments.forEach(p => {
+        const amt = parseFloat(p.amount) || 0;
+        if (p.status === 'Paid') totalRevenue += amt;
+        if (p.status === 'Pending') pendingRevenue += amt;
+      });
+      document.getElementById('dash-stat-monthly-revenue').textContent = App.formatCurrency(totalRevenue);
+      document.getElementById('dash-stat-pending-payments').textContent = App.formatCurrency(pendingRevenue);
+
+      // 8. Trainers
+      document.getElementById('dash-stat-active-trainers').textContent = trainers.length;
+    }
+
+    function initDashboardCharts() {
+      // 1. Monthly Revenue Chart
+      const revCanvas = document.getElementById('chart-monthly-revenue');
+      if (revCanvas) {
+        new Chart(revCanvas, {
+          type: 'bar',
+          data: {
+            labels: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
+            datasets: [{
+              label: 'Revenue (EGP)',
+              data: [14200, 18600, 22400, 24800, 28100, 31900],
+              backgroundColor: '#ff5e14',
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#9ca3af' } },
+              y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#9ca3af' } }
+            }
+          }
+        });
+      }
+
+      // 2. Plan Distribution Chart
+      const planCanvas = document.getElementById('chart-plan-distribution');
+      if (planCanvas) {
+        const members = DB.get('members');
+        const planCounts = { 'Basic Fitness': 0, 'Pro Fitness': 0, 'Gold Athlete': 0, 'Elite VIP Annual': 0 };
+        members.forEach(m => {
+          if (planCounts[m.planName] !== undefined) planCounts[m.planName]++;
+          else planCounts['Pro Fitness']++;
+        });
+
+        new Chart(planCanvas, {
+          type: 'doughnut',
+          data: {
+            labels: Object.keys(planCounts),
+            datasets: [{
+              data: Object.values(planCounts),
+              backgroundColor: ['#64748b', '#ff5e14', '#eab308', '#8b5cf6'],
+              borderWidth: 2,
+              borderColor: '#181d29'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { color: '#9ca3af', font: { size: 11 } } }
+            }
+          }
+        });
+      }
+
+      // 3. Membership Growth Chart
+      const growthCanvas = document.getElementById('chart-membership-growth');
+      if (growthCanvas) {
+        new Chart(growthCanvas, {
+          type: 'line',
+          data: {
+            labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
+            datasets: [{
+              label: 'Active Members',
+              data: [8, 11, 13, 15, 17, 18, 20],
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              fill: true,
+              tension: 0.35,
+              pointBackgroundColor: '#10b981',
+              pointRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#9ca3af' } },
+              y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#9ca3af' } }
+            }
+          }
+        });
+      }
+
+      // 4. Attendance Peak Hours Chart
+      const attCanvas = document.getElementById('chart-attendance-stats');
+      if (attCanvas) {
+        new Chart(attCanvas, {
+          type: 'line',
+          data: {
+            labels: ['06:00', '09:00', '12:00', '15:00', '18:00', '20:00', '22:00'],
+            datasets: [{
+              label: 'Avg Visitors',
+              data: [5, 14, 8, 12, 28, 35, 16],
+              borderColor: '#06b6d4',
+              backgroundColor: 'rgba(6, 182, 212, 0.12)',
+              fill: true,
+              tension: 0.4,
+              pointBackgroundColor: '#06b6d4',
+              pointRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#9ca3af' } },
+              y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#9ca3af' } }
+            }
+          }
+        });
+      }
+    }
+
+    function initDashboardTables() {
+      const members = DB.get('members');
+
+      // Latest registered members (sorted by registrationDate desc)
+      const sortedMembers = [...members].sort((a, b) => (b.registrationDate || '').localeCompare(a.registrationDate || ''));
+      const latestTbody = document.getElementById('dash-latest-members-tbody');
+      if (latestTbody) {
+        latestTbody.innerHTML = sortedMembers.slice(0, 5).map(m => `
+          <tr>
+            <td>
+              <div class="avatar-cell">
+                <img src="${m.photo}" class="avatar-img" alt="${m.name}">
+                <div>
+                  <div class="avatar-info-name">${m.name}</div>
+                  <div class="avatar-info-sub font-mono">${m.id}</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="text-primary font-semibold">${m.planName}</span></td>
+            <td>${m.registrationDate}</td>
+            <td>${App.statusBadge(m.status)}</td>
+            <td class="text-right">
+              <a href="members.html?search=${encodeURIComponent(m.id)}" class="btn btn-outline btn-sm btn-icon">
+                <i class="fa-solid fa-eye"></i>
+              </a>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // Expiring members alert list
+      const expiringList = document.getElementById('dash-expiring-list');
+      const expiringBadge = document.getElementById('dash-expiring-count-badge');
+      if (expiringList) {
+        const expiredOrSoon = members.filter(m => {
+          if (m.status === 'Expired') return true;
+          if (m.expireDate) {
+            const exp = new Date(m.expireDate);
+            const now = new Date();
+            const daysLeft = Math.ceil((exp - now) / (1000 * 60 * 60 * 24));
+            return daysLeft <= 15 && daysLeft >= 0;
+          }
+          return false;
+        });
+
+        if (expiringBadge) expiringBadge.textContent = expiredOrSoon.length;
+
+        if (expiredOrSoon.length === 0) {
+          expiringList.innerHTML = `<div class="text-muted" style="font-size: 0.85rem; padding: 1rem; text-align: center;">No urgent expirations.</div>`;
+        } else {
+          expiringList.innerHTML = expiredOrSoon.slice(0, 5).map(m => `
+            <div class="flex items-center justify-between" style="background: var(--bg-surface); padding: 0.75rem 1rem; border-radius: var(--radius-md); border-left: 3px solid ${m.status === 'Expired' ? 'var(--danger)' : 'var(--warning)'};">
+              <div>
+                <div class="font-bold text-main" style="font-size: 0.88rem;">${m.name}</div>
+                <div class="text-secondary" style="font-size: 0.75rem;">Exp: <strong>${m.expireDate}</strong> • ${m.planName}</div>
+              </div>
+              <a href="members.html?search=${encodeURIComponent(m.id)}" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.25rem 0.6rem;">
+                Renew
+              </a>
+            </div>
+          `).join('');
+        }
+      }
+    }
+  </script>
+</body>
+</html>

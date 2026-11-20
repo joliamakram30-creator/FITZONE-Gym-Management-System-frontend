@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payments & Billing - FITZONE Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="admin-layout">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <div class="brand-text">FIT<span>ZONE</span></div>
+        <span class="brand-sub">Management Suite</span>
+      </div>
+    </div>
+
+    <div class="sidebar-menu">
+      <div class="sidebar-section-title">Core Management</div>
+      <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+      <a href="members.html" class="sidebar-link"><i class="fa-solid fa-users"></i> Members</a>
+      <a href="memberships.html" class="sidebar-link"><i class="fa-solid fa-id-card"></i> Memberships</a>
+      <a href="attendance.html" class="sidebar-link"><i class="fa-solid fa-clock-rotate-left"></i> Attendance</a>
+
+      <div class="sidebar-section-title">Operations & Fitness</div>
+      <a href="trainers.html" class="sidebar-link"><i class="fa-solid fa-user-tie"></i> Trainers</a>
+      <a href="workouts.html" class="sidebar-link"><i class="fa-solid fa-dumbbell"></i> Workout Plans</a>
+      <a href="classes.html" class="sidebar-link"><i class="fa-solid fa-calendar-days"></i> Classes & Booking</a>
+      <a href="equipment.html" class="sidebar-link"><i class="fa-solid fa-wrench"></i> Equipment</a>
+
+      <div class="sidebar-section-title">Finance & Intelligence</div>
+      <a href="payments.html" class="sidebar-link active"><i class="fa-solid fa-receipt"></i> Payments & Billing</a>
+      <a href="reports.html" class="sidebar-link"><i class="fa-solid fa-chart-pie"></i> Reports & Analytics</a>
+      <a href="notifications.html" class="sidebar-link"><i class="fa-solid fa-bell"></i> Notifications</a>
+      <a href="settings.html" class="sidebar-link"><i class="fa-solid fa-gear"></i> Settings</a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="sidebar-user-avatar admin-display-avatar" alt="Admin">
+        <div style="flex: 1; overflow: hidden;">
+          <div class="sidebar-user-name admin-display-name text-truncate">Administrator</div>
+          <div class="sidebar-user-role">Super Admin</div>
+        </div>
+        <button class="btn btn-outline btn-sm btn-icon" title="Logout" onclick="AdminUI.logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Body Content -->
+  <div class="admin-main">
+    <header class="admin-header">
+      <div class="header-left">
+        <button class="mobile-menu-toggle" aria-label="Toggle Navigation"><i class="fa-solid fa-bars"></i></button>
+        <div class="header-title-box">
+          <h1>Financial Operations & Transactions</h1>
+          <p>Record membership fees, issue official tax receipts, and track revenue streams</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="notif-dropdown-wrapper">
+          <button class="notif-btn" onclick="AdminUI.toggleNotifications(event)">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-badge-count" id="admin-notif-count" style="display: none;">0</span>
+          </button>
+          <div class="notif-popover" id="admin-notif-popover">
+            <div class="notif-popover-header">
+              <h4>System Notifications</h4>
+              <button class="btn btn-outline btn-sm" onclick="AdminUI.markAllNotificationsRead()" style="padding: 0.2rem 0.6rem; font-size: 0.72rem;">Mark Read</button>
+            </div>
+            <div class="notif-popover-list" id="admin-notif-list"></div>
+            <div class="notif-popover-footer">
+              <a href="notifications.html" class="text-primary font-bold" style="font-size: 0.8rem;">View All Notifications &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm" onclick="PaymentsCtrl.openRecordPaymentModal()">
+          <i class="fa-solid fa-plus"></i> Record Payment
+        </button>
+      </div>
+    </header>
+
+    <main class="admin-content">
+
+      <!-- Financial Statistics Strip -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Total Revenue Collected</div>
+            <div class="stat-info-val text-success" id="stat-total-revenue">0 EGP</div>
+            <div class="stat-trend positive"><i class="fa-solid fa-shield-halved"></i> 14% VAT compliant</div>
+          </div>
+          <div class="stat-icon-box stat-icon-emerald"><i class="fa-solid fa-sack-dollar"></i></div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Pending Balances</div>
+            <div class="stat-info-val text-warning" id="stat-pending-revenue">0 EGP</div>
+            <div class="stat-trend neutral"><i class="fa-solid fa-clock"></i> Invoices awaiting payment</div>
+          </div>
+          <div class="stat-icon-box stat-icon-amber"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Total Transactions</div>
+            <div class="stat-info-val" id="stat-total-transactions">0</div>
+            <div class="stat-trend positive"><i class="fa-solid fa-receipt"></i> Processed receipts</div>
+          </div>
+          <div class="stat-icon-box stat-icon-orange"><i class="fa-solid fa-credit-card"></i></div>
+        </div>
+      </div>
+
+      <!-- Payments Table & Filter Toolbar -->
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <div class="card-header" style="margin: 0; padding: 1.25rem 1.5rem; background: var(--bg-surface);">
+          <div class="flex items-center gap-2 flex-wrap flex-1">
+            <div style="position: relative; min-width: 240px;">
+              <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+              <input type="text" id="payment-search-input" class="form-control" placeholder="Search by invoice, member, TXN..." style="padding-left: 2.3rem;">
+            </div>
+
+            <select id="payment-method-filter" class="form-select" style="width: auto;">
+              <option value="all">All Methods</option>
+              <option value="Visa">Visa Card</option>
+              <option value="Mastercard">Mastercard</option>
+              <option value="Cash">Cash</option>
+              <option value="InstaPay">InstaPay</option>
+              <option value="Vodafone">Vodafone Cash</option>
+            </select>
+
+            <select id="payment-status-filter" class="form-select" style="width: auto;">
+              <option value="all">All Statuses</option>
+              <option value="Paid">Paid Only</option>
+              <option value="Pending">Pending</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Invoice #</th>
+                <th>Member</th>
+                <th>Subscription / Item</th>
+                <th>Amount (EGP)</th>
+                <th>Method</th>
+                <th>Date / Time</th>
+                <th>Status</th>
+                <th class="text-right">Receipt</th>
+              </tr>
+            </thead>
+            <tbody id="payments-table-body">
+              <!-- Rendered dynamically by payments.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Modal 1: Record New Payment -->
+  <div class="modal" id="record-payment-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-money-bill-wave text-primary"></i> Record Financial Payment</h3>
+        <button class="modal-close" onclick="App.closeModal('record-payment-modal')">&times;</button>
+      </div>
+      <form id="record-payment-form" onsubmit="PaymentsCtrl.savePayment(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Member *</label>
+            <select id="payment-member-select" class="form-select" required></select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Plan / Fee Type</label>
+              <select id="payment-plan-select" class="form-select"></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Amount in EGP *</label>
+              <input type="number" id="payment-amount" class="form-control" placeholder="1300" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Payment Method *</label>
+              <select id="payment-method" class="form-select">
+                <option value="Visa Card">Visa Card</option>
+                <option value="Mastercard">Mastercard</option>
+                <option value="Cash">Cash at Reception</option>
+                <option value="InstaPay">InstaPay Bank Transfer</option>
+                <option value="Vodafone Cash">Vodafone Cash Wallet</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Payment Date</label>
+              <input type="date" id="payment-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="payment-status" class="form-select">
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Transaction Notes</label>
+            <input type="text" id="payment-notes" class="form-control" placeholder="e.g. Quarterly Pro tier renewal at front desk">
+          </div>
+
+          <div class="form-group" style="margin-top: 1rem; background: var(--bg-surface); padding: 0.85rem; border-radius: var(--radius-md);">
+            <label style="display: flex; align-items: center; gap: 0.6rem; cursor: pointer;">
+              <input type="checkbox" id="payment-extend-check" checked style="accent-color: var(--primary);">
+              <span class="font-bold text-main" style="font-size: 0.88rem;">Automatically renew & extend member's expiration date</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="App.closeModal('record-payment-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-circle-check"></i> Save & Generate Receipt</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Luxury Printable Tax Receipt Modal -->
+  <div class="modal" id="receipt-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-receipt text-primary"></i> Official Payment Receipt</h3>
+        <button class="modal-close" onclick="App.closeModal('receipt-modal')">&times;</button>
+      </div>
+      <div class="modal-body" id="receipt-modal-content">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="App.closeModal('receipt-modal')">Close</button>
+        <button type="button" class="btn btn-primary" onclick="PaymentsCtrl.printCurrentReceipt()">
+          <i class="fa-solid fa-print"></i> Print Official Invoice
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script src="../js/payments.js"></script>
+  <script>
+    // Auto-open if ?action=new
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('action') === 'new') {
+        PaymentsCtrl.openRecordPaymentModal();
+      }
+    });
+  </script>
+</body>
+</html>

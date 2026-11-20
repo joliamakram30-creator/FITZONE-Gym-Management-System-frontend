@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memberships & Plans - FITZONE Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="admin-layout">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <div class="brand-text">FIT<span>ZONE</span></div>
+        <span class="brand-sub">Management Suite</span>
+      </div>
+    </div>
+
+    <div class="sidebar-menu">
+      <div class="sidebar-section-title">Core Management</div>
+      <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+      <a href="members.html" class="sidebar-link"><i class="fa-solid fa-users"></i> Members</a>
+      <a href="memberships.html" class="sidebar-link active"><i class="fa-solid fa-id-card"></i> Memberships</a>
+      <a href="attendance.html" class="sidebar-link"><i class="fa-solid fa-clock-rotate-left"></i> Attendance</a>
+
+      <div class="sidebar-section-title">Operations & Fitness</div>
+      <a href="trainers.html" class="sidebar-link"><i class="fa-solid fa-user-tie"></i> Trainers</a>
+      <a href="workouts.html" class="sidebar-link"><i class="fa-solid fa-dumbbell"></i> Workout Plans</a>
+      <a href="classes.html" class="sidebar-link"><i class="fa-solid fa-calendar-days"></i> Classes & Booking</a>
+      <a href="equipment.html" class="sidebar-link"><i class="fa-solid fa-wrench"></i> Equipment</a>
+
+      <div class="sidebar-section-title">Finance & Intelligence</div>
+      <a href="payments.html" class="sidebar-link"><i class="fa-solid fa-receipt"></i> Payments & Billing</a>
+      <a href="reports.html" class="sidebar-link"><i class="fa-solid fa-chart-pie"></i> Reports & Analytics</a>
+      <a href="notifications.html" class="sidebar-link"><i class="fa-solid fa-bell"></i> Notifications</a>
+      <a href="settings.html" class="sidebar-link"><i class="fa-solid fa-gear"></i> Settings</a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="sidebar-user-avatar admin-display-avatar" alt="Admin">
+        <div style="flex: 1; overflow: hidden;">
+          <div class="sidebar-user-name admin-display-name text-truncate">Administrator</div>
+          <div class="sidebar-user-role">Super Admin</div>
+        </div>
+        <button class="btn btn-outline btn-sm btn-icon" title="Logout" onclick="AdminUI.logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Body Content -->
+  <div class="admin-main">
+    <header class="admin-header">
+      <div class="header-left">
+        <button class="mobile-menu-toggle" aria-label="Toggle Navigation"><i class="fa-solid fa-bars"></i></button>
+        <div class="header-title-box">
+          <h1>Membership Plans & Expiration Tracking</h1>
+          <p>Configure subscription tiers, price matrix, and manage renewals</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="notif-dropdown-wrapper">
+          <button class="notif-btn" onclick="AdminUI.toggleNotifications(event)">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-badge-count" id="admin-notif-count" style="display: none;">0</span>
+          </button>
+          <div class="notif-popover" id="admin-notif-popover">
+            <div class="notif-popover-header">
+              <h4>System Notifications</h4>
+              <button class="btn btn-outline btn-sm" onclick="AdminUI.markAllNotificationsRead()" style="padding: 0.2rem 0.6rem; font-size: 0.72rem;">Mark Read</button>
+            </div>
+            <div class="notif-popover-list" id="admin-notif-list"></div>
+            <div class="notif-popover-footer">
+              <a href="notifications.html" class="text-primary font-bold" style="font-size: 0.8rem;">View All Notifications &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm" onclick="openCreatePlanModal()">
+          <i class="fa-solid fa-plus"></i> Create New Plan
+        </button>
+      </div>
+    </header>
+
+    <main class="admin-content">
+
+      <!-- Plan Cards Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;" id="admin-plans-container">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Expiration Tracker Section -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-hourglass-half text-warning"></i> Membership Expiration & Renewal Tracker
+          </div>
+          <span class="badge badge-warning" id="expiring-badge-total">0 Members</span>
+        </div>
+
+        <p class="text-secondary" style="font-size: 0.88rem; margin-bottom: 1.25rem;">
+          Real-time tracker calculated from membership start and duration dates. Statuses update automatically every visit.
+        </p>
+
+        <div class="table-responsive">
+          <table class="table" style="font-size: 0.88rem;">
+            <thead>
+              <tr>
+                <th>Member</th>
+                <th>Current Plan</th>
+                <th>Expiration Date</th>
+                <th>Days Remaining / Status</th>
+                <th class="text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="expiring-members-tbody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Modal: Create / Edit Membership Plan -->
+  <div class="modal" id="plan-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="plan-modal-title"><i class="fa-solid fa-id-card text-primary"></i> Membership Plan</h3>
+        <button class="modal-close" onclick="App.closeModal('plan-modal')">&times;</button>
+      </div>
+      <form onsubmit="handleSavePlan(event)">
+        <div class="modal-body">
+          <input type="hidden" id="plan-id-input">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Plan Name *</label>
+              <input type="text" id="plan-name-input" class="form-control" placeholder="e.g. Platinum Elite" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Price (EGP) *</label>
+              <input type="number" id="plan-price-input" class="form-control" placeholder="1500" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Billing Cycle Label *</label>
+              <input type="text" id="plan-cycle-input" class="form-control" placeholder="e.g. Monthly / 3 Months" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Duration in Days *</label>
+              <input type="number" id="plan-days-input" class="form-control" placeholder="30" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Plan Description</label>
+            <textarea id="plan-desc-input" class="form-control" rows="2" placeholder="Summary of who this plan is best suited for..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Included Features (One per line)</label>
+            <textarea id="plan-features-input" class="form-control" rows="4" placeholder="Unlimited 24/7 Access&#10;All Group Classes&#10;Locker & Sauna Access"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Badge Label (Optional)</label>
+              <input type="text" id="plan-badge-input" class="form-control" placeholder="e.g. Most Popular">
+            </div>
+            <div class="form-group flex items-center" style="margin-top: 1.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" id="plan-popular-input" style="accent-color: var(--primary);">
+                <span class="font-bold">Highlight as Most Popular</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="App.closeModal('plan-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Plan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderAdminPlans();
+      renderExpirationTracker();
+    });
+
+    function renderAdminPlans() {
+      const container = document.getElementById('admin-plans-container');
+      if (!container) return;
+
+      const plans = DB.get('plans');
+      const members = DB.get('members');
+
+      container.innerHTML = plans.map(p => {
+        const enrolledCount = members.filter(m => m.planId === p.id).length;
+
+        return `
+          <div class="card ${p.popular ? 'border-primary' : ''}" style="display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+            ${p.badge ? `<span class="badge ${p.popular ? 'badge-primary' : 'badge-secondary'}" style="position: absolute; top: 1rem; right: 1rem;">${p.badge}</span>` : ''}
+            <div>
+              <h3 style="font-size: 1.3rem; margin-bottom: 0.35rem; color: #ffffff;">${p.name}</h3>
+              <div style="font-size: 1.6rem; font-weight: 900; color: var(--primary); font-family: var(--font-display); margin-bottom: 0.5rem;">
+                ${p.price.toLocaleString('en-US')} <span style="font-size: 0.9rem; color: var(--text-muted);">EGP / ${p.billingCycle}</span>
+              </div>
+              <p class="text-secondary" style="font-size: 0.85rem; line-height: 1.5; margin-bottom: 1rem;">${p.description || ''}</p>
+
+              <div style="background: var(--bg-surface); padding: 0.75rem 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem;">
+                <div class="flex justify-between" style="font-size: 0.82rem; margin-bottom: 0.25rem;">
+                  <span class="text-muted">Duration:</span>
+                  <strong>${p.durationDays} Days</strong>
+                </div>
+                <div class="flex justify-between" style="font-size: 0.82rem;">
+                  <span class="text-muted">Active Enrolled:</span>
+                  <strong class="text-primary font-bold">${enrolledCount} Members</strong>
+                </div>
+              </div>
+
+              <div style="margin-bottom: 1.5rem;">
+                <div class="text-muted" style="font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.5rem; font-weight: 700;">Included Features:</div>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.82rem; color: var(--text-secondary);">
+                  ${p.features.slice(0, 4).map(f => `<li><i class="fa-solid fa-check text-success"></i> ${f}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+
+            <div class="flex gap-2">
+              <button class="btn btn-outline btn-sm flex-1" onclick="openEditPlanModal('${p.id}')">
+                <i class="fa-solid fa-pen"></i> Edit
+              </button>
+              <button class="btn btn-outline btn-sm text-danger" title="Delete Plan" onclick="deletePlan('${p.id}')">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderExpirationTracker() {
+      const tbody = document.getElementById('expiring-members-tbody');
+      const badge = document.getElementById('expiring-badge-total');
+      if (!tbody) return;
+
+      const members = DB.get('members');
+      const today = new Date();
+
+      // Sort by expiration date ascending (soonest first)
+      const sorted = [...members].sort((a, b) => (a.expireDate || '').localeCompare(b.expireDate || ''));
+
+      if (badge) badge.textContent = `${sorted.length} Total Subscriptions`;
+
+      tbody.innerHTML = sorted.map(m => {
+        const expDate = new Date(m.expireDate);
+        const diffDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
+
+        let statusText = '';
+        if (diffDays < 0) {
+          statusText = `<span class="badge badge-danger"><i class="fa-solid fa-circle-xmark"></i> Expired (${Math.abs(diffDays)}d ago)</span>`;
+        } else if (diffDays <= 7) {
+          statusText = `<span class="badge badge-warning"><i class="fa-solid fa-clock"></i> Expiring in ${diffDays} days</span>`;
+        } else {
+          statusText = `<span class="badge badge-success"><i class="fa-solid fa-check"></i> ${diffDays} days left</span>`;
+        }
+
+        return `
+          <tr>
+            <td>
+              <div class="avatar-cell">
+                <img src="${m.photo}" class="avatar-img" alt="${m.name}">
+                <div>
+                  <div class="avatar-info-name">${m.name}</div>
+                  <div class="avatar-info-sub font-mono">${m.id} • ${m.phone}</div>
+                </div>
+              </div>
+            </td>
+            <td><strong class="text-primary">${m.planName}</strong></td>
+            <td><span class="font-mono">${m.expireDate}</span></td>
+            <td>${statusText}</td>
+            <td class="text-right">
+              <a href="members.html?search=${encodeURIComponent(m.id)}" class="btn btn-primary btn-sm">
+                <i class="fa-solid fa-arrows-rotate"></i> Renew Plan
+              </a>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openCreatePlanModal() {
+      document.getElementById('plan-modal-title').textContent = "Create New Membership Plan";
+      document.getElementById('plan-id-input').value = "";
+      document.getElementById('plan-name-input').value = "";
+      document.getElementById('plan-price-input').value = "";
+      document.getElementById('plan-cycle-input').value = "Monthly";
+      document.getElementById('plan-days-input').value = "30";
+      document.getElementById('plan-desc-input').value = "";
+      document.getElementById('plan-features-input').value = "Full Gym Access\nStandard Lockers\nFree Wi-Fi";
+      document.getElementById('plan-badge-input').value = "";
+      document.getElementById('plan-popular-input').checked = false;
+
+      App.openModal('plan-modal');
+    }
+
+    function openEditPlanModal(planId) {
+      const plan = DB.getById('plans', planId);
+      if (!plan) return;
+
+      document.getElementById('plan-modal-title').textContent = `Edit Plan: ${plan.name}`;
+      document.getElementById('plan-id-input').value = plan.id;
+      document.getElementById('plan-name-input').value = plan.name;
+      document.getElementById('plan-price-input').value = plan.price;
+      document.getElementById('plan-cycle-input').value = plan.billingCycle;
+      document.getElementById('plan-days-input').value = plan.durationDays;
+      document.getElementById('plan-desc-input').value = plan.description || '';
+      document.getElementById('plan-features-input').value = (plan.features || []).join('\n');
+      document.getElementById('plan-badge-input').value = plan.badge || '';
+      document.getElementById('plan-popular-input').checked = !!plan.popular;
+
+      App.openModal('plan-modal');
+    }
+
+    function handleSavePlan(e) {
+      e.preventDefault();
+      const id = document.getElementById('plan-id-input').value;
+      const name = document.getElementById('plan-name-input').value.trim();
+      const price = parseFloat(document.getElementById('plan-price-input').value) || 0;
+      const billingCycle = document.getElementById('plan-cycle-input').value.trim();
+      const durationDays = parseInt(document.getElementById('plan-days-input').value, 10) || 30;
+      const description = document.getElementById('plan-desc-input').value.trim();
+      const featuresRaw = document.getElementById('plan-features-input').value.trim();
+      const features = featuresRaw.split('\n').map(f => f.trim()).filter(Boolean);
+      const badge = document.getElementById('plan-badge-input').value.trim();
+      const popular = document.getElementById('plan-popular-input').checked;
+
+      if (id) {
+        DB.update('plans', id, {
+          name, price, billingCycle, durationDays, description, features, badge, popular
+        });
+        App.showToast(`Plan ${name} updated successfully!`, "success");
+      } else {
+        const newPlan = {
+          id: `plan-${Date.now().toString().slice(-4)}`,
+          name, price, billingCycle, durationDays, description, features, badge, popular
+        };
+        DB.add('plans', newPlan);
+        App.showToast(`New plan "${name}" created and published!`, "success");
+      }
+
+      App.closeModal('plan-modal');
+      renderAdminPlans();
+    }
+
+    function deletePlan(planId) {
+      const plan = DB.getById('plans', planId);
+      if (!plan) return;
+
+      App.confirm(
+        `Delete Plan ${plan.name}?`,
+        `Are you sure you want to delete this plan? Members currently assigned will retain their plan details.`,
+        () => {
+          DB.delete('plans', planId);
+          App.showToast(`Plan ${plan.name} removed.`, "success");
+          renderAdminPlans();
+        }
+      );
+    }
+  </script>
+</body>
+</html>

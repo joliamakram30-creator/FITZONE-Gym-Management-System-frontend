@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equipment & Maintenance - FITZONE Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="admin-layout">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <div class="brand-text">FIT<span>ZONE</span></div>
+        <span class="brand-sub">Management Suite</span>
+      </div>
+    </div>
+
+    <div class="sidebar-menu">
+      <div class="sidebar-section-title">Core Management</div>
+      <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+      <a href="members.html" class="sidebar-link"><i class="fa-solid fa-users"></i> Members</a>
+      <a href="memberships.html" class="sidebar-link"><i class="fa-solid fa-id-card"></i> Memberships</a>
+      <a href="attendance.html" class="sidebar-link"><i class="fa-solid fa-clock-rotate-left"></i> Attendance</a>
+
+      <div class="sidebar-section-title">Operations & Fitness</div>
+      <a href="trainers.html" class="sidebar-link"><i class="fa-solid fa-user-tie"></i> Trainers</a>
+      <a href="workouts.html" class="sidebar-link"><i class="fa-solid fa-dumbbell"></i> Workout Plans</a>
+      <a href="classes.html" class="sidebar-link"><i class="fa-solid fa-calendar-days"></i> Classes & Booking</a>
+      <a href="equipment.html" class="sidebar-link active"><i class="fa-solid fa-wrench"></i> Equipment</a>
+
+      <div class="sidebar-section-title">Finance & Intelligence</div>
+      <a href="payments.html" class="sidebar-link"><i class="fa-solid fa-receipt"></i> Payments & Billing</a>
+      <a href="reports.html" class="sidebar-link"><i class="fa-solid fa-chart-pie"></i> Reports & Analytics</a>
+      <a href="notifications.html" class="sidebar-link"><i class="fa-solid fa-bell"></i> Notifications</a>
+      <a href="settings.html" class="sidebar-link"><i class="fa-solid fa-gear"></i> Settings</a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="sidebar-user-avatar admin-display-avatar" alt="Admin">
+        <div style="flex: 1; overflow: hidden;">
+          <div class="sidebar-user-name admin-display-name text-truncate">Administrator</div>
+          <div class="sidebar-user-role">Super Admin</div>
+        </div>
+        <button class="btn btn-outline btn-sm btn-icon" title="Logout" onclick="AdminUI.logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Body Content -->
+  <div class="admin-main">
+    <header class="admin-header">
+      <div class="header-left">
+        <button class="mobile-menu-toggle" aria-label="Toggle Navigation"><i class="fa-solid fa-bars"></i></button>
+        <div class="header-title-box">
+          <h1>Equipment Inventory & Maintenance</h1>
+          <p>Track machine servicing, condition audits, and report maintenance requests</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="notif-dropdown-wrapper">
+          <button class="notif-btn" onclick="AdminUI.toggleNotifications(event)">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-badge-count" id="admin-notif-count" style="display: none;">0</span>
+          </button>
+          <div class="notif-popover" id="admin-notif-popover">
+            <div class="notif-popover-header">
+              <h4>System Notifications</h4>
+              <button class="btn btn-outline btn-sm" onclick="AdminUI.markAllNotificationsRead()" style="padding: 0.2rem 0.6rem; font-size: 0.72rem;">Mark Read</button>
+            </div>
+            <div class="notif-popover-list" id="admin-notif-list"></div>
+            <div class="notif-popover-footer">
+              <a href="notifications.html" class="text-primary font-bold" style="font-size: 0.8rem;">View All Notifications &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm" onclick="openEquipmentModal()">
+          <i class="fa-solid fa-plus"></i> Add Equipment
+        </button>
+      </div>
+    </header>
+
+    <main class="admin-content">
+
+      <!-- Equipment Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Total Machines</div>
+            <div class="stat-info-val" id="eq-stat-total">0</div>
+            <div class="stat-trend positive"><i class="fa-solid fa-check"></i> On gym inventory</div>
+          </div>
+          <div class="stat-icon-box stat-icon-orange"><i class="fa-solid fa-dumbbell"></i></div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Operational</div>
+            <div class="stat-info-val text-success" id="eq-stat-operational">0</div>
+            <div class="stat-trend positive"><i class="fa-solid fa-circle-check"></i> 100% floor ready</div>
+          </div>
+          <div class="stat-icon-box stat-icon-emerald"><i class="fa-solid fa-circle-check"></i></div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Under Maintenance</div>
+            <div class="stat-info-val text-warning" id="eq-stat-maintenance">0</div>
+            <div class="stat-trend neutral"><i class="fa-solid fa-wrench"></i> Servicing in progress</div>
+          </div>
+          <div class="stat-icon-box stat-icon-amber"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+        </div>
+      </div>
+
+      <!-- Inventory Table -->
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <div class="card-header" style="margin: 0; padding: 1.25rem 1.5rem; background: var(--bg-surface);">
+          <div class="flex items-center gap-2 flex-wrap flex-1">
+            <div style="position: relative; min-width: 220px;">
+              <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+              <input type="text" id="eq-search-input" class="form-control" placeholder="Search machine, model..." style="padding-left: 2.3rem;">
+            </div>
+
+            <select id="eq-category-filter" class="form-select" style="width: auto;">
+              <option value="all">All Categories</option>
+              <option value="Strength">Strength</option>
+              <option value="Cardio">Cardio</option>
+              <option value="Free Weights">Free Weights</option>
+              <option value="Functional">Functional</option>
+              <option value="Recovery">Recovery & Spa</option>
+            </select>
+
+            <select id="eq-status-filter" class="form-select" style="width: auto;">
+              <option value="all">All Statuses</option>
+              <option value="Operational">Operational</option>
+              <option value="Under Maintenance">Under Maintenance</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Machine & Model</th>
+                <th>Category</th>
+                <th>Location</th>
+                <th>Condition</th>
+                <th>Next Service Due</th>
+                <th>Status</th>
+                <th class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="equipment-table-body">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Modal: Add / Edit Equipment -->
+  <div class="modal" id="equipment-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="eq-modal-title"><i class="fa-solid fa-wrench text-primary"></i> Equipment Details</h3>
+        <button class="modal-close" onclick="App.closeModal('equipment-modal')">&times;</button>
+      </div>
+      <form onsubmit="handleSaveEquipment(event)">
+        <div class="modal-body">
+          <input type="hidden" id="eq-id-input">
+
+          <div class="form-group">
+            <label class="form-label">Equipment / Machine Name *</label>
+            <input type="text" id="eq-name-input" class="form-control" placeholder="e.g. LifeFitness Pro Dual Cable Crossover" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="eq-cat-input" class="form-select">
+                <option value="Strength">Strength Machine</option>
+                <option value="Cardio">Cardio Theater</option>
+                <option value="Free Weights">Free Weights & Racks</option>
+                <option value="Functional">Functional & CrossFit</option>
+                <option value="Recovery & Spa">Recovery & Spa</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Floor Location</label>
+              <input type="text" id="eq-loc-input" class="form-control" placeholder="e.g. Main Floor - Zone B" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Condition</label>
+              <select id="eq-cond-input" class="form-select">
+                <option value="Excellent">Excellent</option>
+                <option value="Good">Good</option>
+                <option value="Fair">Fair</option>
+                <option value="Needs Repair">Needs Repair</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Operational Status</label>
+              <select id="eq-status-input" class="form-select">
+                <option value="Operational">Operational</option>
+                <option value="Under Maintenance">Under Maintenance</option>
+                <option value="Out of Order">Out of Order</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Last Serviced Date</label>
+              <input type="date" id="eq-last-service-input" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Next Maintenance Due</label>
+              <input type="date" id="eq-next-service-input" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Repair / Maintenance Notes</label>
+            <input type="text" id="eq-notes-input" class="form-control" placeholder="e.g. Cable tension verified, pulley lubricated">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="App.closeModal('equipment-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Equipment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    let eqSearch = '';
+    let eqCategory = 'all';
+    let eqStatus = 'all';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderEquipmentTable();
+      bindEqEvents();
+    });
+
+    function bindEqEvents() {
+      const searchInput = document.getElementById('eq-search-input');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          eqSearch = e.target.value.trim().toLowerCase();
+          renderEquipmentTable();
+        });
+      }
+
+      const catFilter = document.getElementById('eq-category-filter');
+      if (catFilter) {
+        catFilter.addEventListener('change', (e) => {
+          eqCategory = e.target.value;
+          renderEquipmentTable();
+        });
+      }
+
+      const statusFilter = document.getElementById('eq-status-filter');
+      if (statusFilter) {
+        statusFilter.addEventListener('change', (e) => {
+          eqStatus = e.target.value;
+          renderEquipmentTable();
+        });
+      }
+    }
+
+    function renderEquipmentTable() {
+      const equipment = DB.get('equipment');
+      
+      // Update stats
+      document.getElementById('eq-stat-total').textContent = equipment.length;
+      document.getElementById('eq-stat-operational').textContent = equipment.filter(e => e.status === 'Operational').length;
+      document.getElementById('eq-stat-maintenance').textContent = equipment.filter(e => e.status !== 'Operational').length;
+
+      let list = equipment;
+      if (eqSearch) {
+        list = list.filter(e => e.name.toLowerCase().includes(eqSearch) || (e.location && e.location.toLowerCase().includes(eqSearch)));
+      }
+      if (eqCategory !== 'all') {
+        list = list.filter(e => e.category.toLowerCase().includes(eqCategory.toLowerCase()));
+      }
+      if (eqStatus !== 'all') {
+        list = list.filter(e => e.status === eqStatus);
+      }
+
+      const tbody = document.getElementById('equipment-table-body');
+      if (!tbody) return;
+
+      tbody.innerHTML = list.map(item => `
+        <tr>
+          <td>
+            <div class="font-bold text-main">${item.name}</div>
+            <div class="text-muted font-mono" style="font-size: 0.75rem;">${item.id} • SN: ${item.serialNumber || 'N/A'}</div>
+          </td>
+          <td><span class="badge badge-secondary">${item.category}</span></td>
+          <td>${item.location || 'Main Floor'}</td>
+          <td>
+            <span class="badge ${item.condition === 'Excellent' || item.condition === 'Good' ? 'badge-success' : 'badge-warning'}">
+              ${item.condition}
+            </span>
+          </td>
+          <td>
+            <div class="font-mono">${item.nextMaintenance || 'N/A'}</div>
+            <div class="text-muted" style="font-size: 0.75rem;">Last: ${item.lastServiced || '-'}</div>
+          </td>
+          <td>${App.statusBadge(item.status)}</td>
+          <td class="text-right">
+            <button class="btn btn-outline btn-sm btn-icon" onclick="openEditEquipmentModal('${item.id}')">
+              <i class="fa-solid fa-pen"></i>
+            </button>
+            <button class="btn btn-outline btn-sm btn-icon text-danger" onclick="deleteEquipment('${item.id}')">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openEquipmentModal() {
+      document.getElementById('eq-modal-title').textContent = "Add Gym Equipment";
+      document.getElementById('eq-id-input').value = "";
+      document.getElementById('eq-name-input').value = "";
+      document.getElementById('eq-cat-input').value = "Strength";
+      document.getElementById('eq-loc-input').value = "Main Floor";
+      document.getElementById('eq-cond-input').value = "Excellent";
+      document.getElementById('eq-status-input').value = "Operational";
+      document.getElementById('eq-last-service-input').value = new Date().toISOString().split('T')[0];
+      
+      const nextDue = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      document.getElementById('eq-next-service-input').value = nextDue;
+      document.getElementById('eq-notes-input').value = "";
+
+      App.openModal('equipment-modal');
+    }
+
+    function openEditEquipmentModal(id) {
+      const eq = DB.getById('equipment', id);
+      if (!eq) return;
+
+      document.getElementById('eq-modal-title').textContent = `Edit Equipment: ${eq.name}`;
+      document.getElementById('eq-id-input').value = eq.id;
+      document.getElementById('eq-name-input').value = eq.name;
+      document.getElementById('eq-cat-input').value = eq.category;
+      document.getElementById('eq-loc-input').value = eq.location || "Main Floor";
+      document.getElementById('eq-cond-input').value = eq.condition;
+      document.getElementById('eq-status-input').value = eq.status;
+      document.getElementById('eq-last-service-input').value = eq.lastServiced || "";
+      document.getElementById('eq-next-service-input').value = eq.nextMaintenance || "";
+      document.getElementById('eq-notes-input').value = eq.repairNotes || "";
+
+      App.openModal('equipment-modal');
+    }
+
+    function handleSaveEquipment(e) {
+      e.preventDefault();
+      const id = document.getElementById('eq-id-input').value;
+      const name = document.getElementById('eq-name-input').value.trim();
+      const category = document.getElementById('eq-cat-input').value;
+      const location = document.getElementById('eq-loc-input').value.trim();
+      const condition = document.getElementById('eq-cond-input').value;
+      const status = document.getElementById('eq-status-input').value;
+      const lastServiced = document.getElementById('eq-last-service-input').value;
+      const nextMaintenance = document.getElementById('eq-next-service-input').value;
+      const repairNotes = document.getElementById('eq-notes-input').value.trim();
+
+      if (id) {
+        DB.update('equipment', id, { name, category, location, condition, status, lastServiced, nextMaintenance, repairNotes });
+        App.showToast(`Equipment ${name} updated!`, "success");
+      } else {
+        const newEq = {
+          id: `EQ-${Math.floor(100 + Math.random() * 900)}`,
+          name, category, location, condition, status, lastServiced, nextMaintenance, repairNotes,
+          serialNumber: `SN-${Math.floor(10000 + Math.random() * 90000)}`
+        };
+        DB.add('equipment', newEq);
+        App.showToast(`Equipment added to inventory!`, "success");
+      }
+
+      App.closeModal('equipment-modal');
+      renderEquipmentTable();
+    }
+
+    function deleteEquipment(id) {
+      const eq = DB.getById('equipment', id);
+      if (!eq) return;
+
+      App.confirm(
+        `Remove Equipment: ${eq.name}?`,
+        `Are you sure you want to delete this machine from the inventory registry?`,
+        () => {
+          DB.delete('equipment', id);
+          App.showToast("Equipment removed.", "success");
+          renderEquipmentTable();
+        }
+      );
+    }
+  </script>
+</body>
+</html>

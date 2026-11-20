@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications Center - FITZONE Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="admin-layout">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <div class="brand-text">FIT<span>ZONE</span></div>
+        <span class="brand-sub">Management Suite</span>
+      </div>
+    </div>
+
+    <div class="sidebar-menu">
+      <div class="sidebar-section-title">Core Management</div>
+      <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+      <a href="members.html" class="sidebar-link"><i class="fa-solid fa-users"></i> Members</a>
+      <a href="memberships.html" class="sidebar-link"><i class="fa-solid fa-id-card"></i> Memberships</a>
+      <a href="attendance.html" class="sidebar-link"><i class="fa-solid fa-clock-rotate-left"></i> Attendance</a>
+
+      <div class="sidebar-section-title">Operations & Fitness</div>
+      <a href="trainers.html" class="sidebar-link"><i class="fa-solid fa-user-tie"></i> Trainers</a>
+      <a href="workouts.html" class="sidebar-link"><i class="fa-solid fa-dumbbell"></i> Workout Plans</a>
+      <a href="classes.html" class="sidebar-link"><i class="fa-solid fa-calendar-days"></i> Classes & Booking</a>
+      <a href="equipment.html" class="sidebar-link"><i class="fa-solid fa-wrench"></i> Equipment</a>
+
+      <div class="sidebar-section-title">Finance & Intelligence</div>
+      <a href="payments.html" class="sidebar-link"><i class="fa-solid fa-receipt"></i> Payments & Billing</a>
+      <a href="reports.html" class="sidebar-link"><i class="fa-solid fa-chart-pie"></i> Reports & Analytics</a>
+      <a href="notifications.html" class="sidebar-link active"><i class="fa-solid fa-bell"></i> Notifications</a>
+      <a href="settings.html" class="sidebar-link"><i class="fa-solid fa-gear"></i> Settings</a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="sidebar-user-avatar admin-display-avatar" alt="Admin">
+        <div style="flex: 1; overflow: hidden;">
+          <div class="sidebar-user-name admin-display-name text-truncate">Administrator</div>
+          <div class="sidebar-user-role">Super Admin</div>
+        </div>
+        <button class="btn btn-outline btn-sm btn-icon" title="Logout" onclick="AdminUI.logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Body Content -->
+  <div class="admin-main">
+    <header class="admin-header">
+      <div class="header-left">
+        <button class="mobile-menu-toggle" aria-label="Toggle Navigation"><i class="fa-solid fa-bars"></i></button>
+        <div class="header-title-box">
+          <h1>System Alerts & Notifications</h1>
+          <p>Real-time audit log of expirations, class bookings, payments, and equipment status</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <button class="btn btn-secondary btn-sm" onclick="AdminUI.markAllNotificationsRead(); renderNotifCenter();">
+          <i class="fa-solid fa-check-double"></i> Mark All as Read
+        </button>
+      </div>
+    </header>
+
+    <main class="admin-content" style="max-width: 900px;">
+
+      <!-- Filter Pills -->
+      <div class="flex gap-1 flex-wrap" style="margin-bottom: 1.5rem;" id="notif-filter-pills">
+        <button class="btn btn-primary btn-sm notif-filter-btn" onclick="filterNotifs('all', this)">All Alerts</button>
+        <button class="btn btn-secondary btn-sm notif-filter-btn" onclick="filterNotifs('expiration', this)">Expirations</button>
+        <button class="btn btn-secondary btn-sm notif-filter-btn" onclick="filterNotifs('payment', this)">Payments</button>
+        <button class="btn btn-secondary btn-sm notif-filter-btn" onclick="filterNotifs('booking', this)">Class Bookings</button>
+        <button class="btn btn-secondary btn-sm notif-filter-btn" onclick="filterNotifs('equipment', this)">Equipment</button>
+        <button class="btn btn-secondary btn-sm notif-filter-btn" onclick="filterNotifs('registration', this)">Enrollments</button>
+      </div>
+
+      <!-- Notifications List Container -->
+      <div id="full-notifications-container" style="display: flex; flex-direction: column; gap: 0.85rem;">
+        <!-- Rendered dynamically -->
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    let currentNotifFilter = 'all';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderNotifCenter();
+    });
+
+    function filterNotifs(type, btn) {
+      currentNotifFilter = type;
+      document.querySelectorAll('.notif-filter-btn').forEach(b => {
+        b.classList.remove('btn-primary');
+        b.classList.add('btn-secondary');
+      });
+      btn.classList.remove('btn-secondary');
+      btn.classList.add('btn-primary');
+      renderNotifCenter();
+    }
+
+    function renderNotifCenter() {
+      const container = document.getElementById('full-notifications-container');
+      if (!container) return;
+
+      let notifs = DB.get('notifications');
+      if (currentNotifFilter !== 'all') {
+        notifs = notifs.filter(n => n.type === currentNotifFilter);
+      }
+
+      if (notifs.length === 0) {
+        container.innerHTML = `
+          <div class="card text-center" style="padding: 3rem; color: var(--text-muted);">
+            <i class="fa-solid fa-bell-slash" style="font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.4;"></i>
+            <p>No notifications in this category.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = notifs.map(n => {
+        let icon = 'bell';
+        let colorClass = 'stat-icon-orange';
+        if (n.type === 'expiration') { icon = 'user-xmark'; colorClass = 'stat-icon-rose'; }
+        else if (n.type === 'payment') { icon = 'receipt'; colorClass = 'stat-icon-amber'; }
+        else if (n.type === 'booking') { icon = 'calendar-check'; colorClass = 'stat-icon-cyan'; }
+        else if (n.type === 'equipment') { icon = 'wrench'; colorClass = 'stat-icon-purple'; }
+        else if (n.type === 'registration') { icon = 'user-plus'; colorClass = 'stat-icon-emerald'; }
+
+        return `
+          <div class="card flex items-start gap-3" style="padding: 1.25rem; ${!n.read ? 'border-left: 4px solid var(--primary); background: rgba(255, 94, 20, 0.03);' : ''}">
+            <div class="stat-icon-box ${colorClass}" style="width: 44px; height: 44px; font-size: 1.1rem; flex-shrink: 0;">
+              <i class="fa-solid fa-${icon}"></i>
+            </div>
+            <div style="flex: 1;">
+              <div class="flex items-center justify-between" style="margin-bottom: 0.35rem;">
+                <h4 style="font-size: 1rem; color: #ffffff; margin: 0;">${n.title}</h4>
+                <span class="badge ${!n.read ? 'badge-primary' : 'badge-secondary'}" style="font-size: 0.72rem;">${n.time}</span>
+              </div>
+              <p class="text-secondary" style="font-size: 0.88rem; line-height: 1.5; margin-bottom: 0.75rem;">${n.message}</p>
+              
+              <div class="flex items-center gap-2">
+                ${n.link ? `<a href="${n.link}" class="btn btn-primary btn-sm" style="font-size: 0.78rem; padding: 0.25rem 0.65rem;" onclick="DB.update('notifications', '${n.id}', { read: true })">Open Action &rarr;</a>` : ''}
+                ${!n.read ? `
+                  <button class="btn btn-outline btn-sm" style="font-size: 0.78rem; padding: 0.25rem 0.65rem;" onclick="markSingleRead('${n.id}')">
+                    Mark as Read
+                  </button>
+                ` : ''}
+                <button class="btn btn-outline btn-sm text-danger" style="font-size: 0.78rem; padding: 0.25rem 0.65rem;" onclick="deleteSingleNotif('${n.id}')">
+                  Dismiss
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function markSingleRead(id) {
+      DB.update('notifications', id, { read: true });
+      AdminUI.refreshNotifications();
+      renderNotifCenter();
+    }
+
+    function deleteSingleNotif(id) {
+      DB.delete('notifications', id);
+      AdminUI.refreshNotifications();
+      renderNotifCenter();
+      App.showToast("Notification dismissed.", "info");
+    }
+  </script>
+</body>
+</html>

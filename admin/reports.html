@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports & Analytics - FITZONE Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body class="admin-layout">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <div class="brand-text">FIT<span>ZONE</span></div>
+        <span class="brand-sub">Management Suite</span>
+      </div>
+    </div>
+
+    <div class="sidebar-menu">
+      <div class="sidebar-section-title">Core Management</div>
+      <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+      <a href="members.html" class="sidebar-link"><i class="fa-solid fa-users"></i> Members</a>
+      <a href="memberships.html" class="sidebar-link"><i class="fa-solid fa-id-card"></i> Memberships</a>
+      <a href="attendance.html" class="sidebar-link"><i class="fa-solid fa-clock-rotate-left"></i> Attendance</a>
+
+      <div class="sidebar-section-title">Operations & Fitness</div>
+      <a href="trainers.html" class="sidebar-link"><i class="fa-solid fa-user-tie"></i> Trainers</a>
+      <a href="workouts.html" class="sidebar-link"><i class="fa-solid fa-dumbbell"></i> Workout Plans</a>
+      <a href="classes.html" class="sidebar-link"><i class="fa-solid fa-calendar-days"></i> Classes & Booking</a>
+      <a href="equipment.html" class="sidebar-link"><i class="fa-solid fa-wrench"></i> Equipment</a>
+
+      <div class="sidebar-section-title">Finance & Intelligence</div>
+      <a href="payments.html" class="sidebar-link"><i class="fa-solid fa-receipt"></i> Payments & Billing</a>
+      <a href="reports.html" class="sidebar-link active"><i class="fa-solid fa-chart-pie"></i> Reports & Analytics</a>
+      <a href="notifications.html" class="sidebar-link"><i class="fa-solid fa-bell"></i> Notifications</a>
+      <a href="settings.html" class="sidebar-link"><i class="fa-solid fa-gear"></i> Settings</a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="sidebar-user-avatar admin-display-avatar" alt="Admin">
+        <div style="flex: 1; overflow: hidden;">
+          <div class="sidebar-user-name admin-display-name text-truncate">Administrator</div>
+          <div class="sidebar-user-role">Super Admin</div>
+        </div>
+        <button class="btn btn-outline btn-sm btn-icon" title="Logout" onclick="AdminUI.logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Body Content -->
+  <div class="admin-main">
+    <header class="admin-header">
+      <div class="header-left">
+        <button class="mobile-menu-toggle" aria-label="Toggle Navigation"><i class="fa-solid fa-bars"></i></button>
+        <div class="header-title-box">
+          <h1>Executive Analytics & Audits</h1>
+          <p>Financial yields, member retention, trainer performance, and facility utilization</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="notif-dropdown-wrapper">
+          <button class="notif-btn" onclick="AdminUI.toggleNotifications(event)">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-badge-count" id="admin-notif-count" style="display: none;">0</span>
+          </button>
+          <div class="notif-popover" id="admin-notif-popover">
+            <div class="notif-popover-header">
+              <h4>System Notifications</h4>
+              <button class="btn btn-outline btn-sm" onclick="AdminUI.markAllNotificationsRead()" style="padding: 0.2rem 0.6rem; font-size: 0.72rem;">Mark Read</button>
+            </div>
+            <div class="notif-popover-list" id="admin-notif-list"></div>
+            <div class="notif-popover-footer">
+              <a href="notifications.html" class="text-primary font-bold" style="font-size: 0.8rem;">View All Notifications &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm" onclick="window.print()">
+          <i class="fa-solid fa-print"></i> Print Executive Report
+        </button>
+      </div>
+    </header>
+
+    <main class="admin-content">
+
+      <!-- Printable Report Header (visible on print) -->
+      <div class="receipt-header" style="display: none;" id="print-header">
+        <h2>FITZONE LUXURY FITNESS & WELLNESS</h2>
+        <p>Executive Facility Performance & Financial Audit Report</p>
+        <p style="font-size: 0.8rem; color: #666;">Generated on: <span id="report-gen-date"></span></p>
+      </div>
+
+      <!-- Top Summary KPIs -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Annual Gross Yield</div>
+            <div class="stat-info-val text-success" id="rep-total-revenue">--</div>
+            <div class="stat-trend positive"><i class="fa-solid fa-arrow-trend-up"></i> Total receipts</div>
+          </div>
+          <div class="stat-icon-box stat-icon-emerald"><i class="fa-solid fa-coins"></i></div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Retention Rate</div>
+            <div class="stat-info-val text-primary" id="rep-retention-rate">85%</div>
+            <div class="stat-trend positive"><i class="fa-solid fa-check"></i> Active members vs Expired</div>
+          </div>
+          <div class="stat-icon-box stat-icon-orange"><i class="fa-solid fa-user-check"></i></div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Class Capacity Rate</div>
+            <div class="stat-info-val" id="rep-class-occupancy">68%</div>
+            <div class="stat-trend positive"><i class="fa-solid fa-calendar-check"></i> Across 6 group classes</div>
+          </div>
+          <div class="stat-icon-box stat-icon-cyan"><i class="fa-solid fa-calendar-check"></i></div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-title">Avg Revenue / Athlete</div>
+            <div class="stat-info-val text-primary" id="rep-arpu">--</div>
+            <div class="stat-trend positive"><i class="fa-solid fa-gem"></i> ARPU</div>
+          </div>
+          <div class="stat-icon-box stat-icon-purple"><i class="fa-solid fa-chart-line"></i></div>
+        </div>
+      </div>
+
+      <!-- Charts Layout -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-chart-column text-primary"></i> Monthly Revenue Inflows (EGP)</div>
+            <span class="badge badge-primary">2024 YTD</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="rep-chart-revenue"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-chart-pie text-primary"></i> Revenue by Tier</div>
+            <span class="badge badge-secondary">Plan Inflow</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="rep-chart-tiers"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Performance Tables: Coach Allocation & Class Utilization -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+        
+        <!-- Trainer Performance Breakdown -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-user-tie text-primary"></i> Master Coach Roster & Workload</div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table" style="font-size: 0.85rem;">
+              <thead>
+                <tr>
+                  <th>Coach</th>
+                  <th>Specialty</th>
+                  <th>Athletes</th>
+                  <th>Rating</th>
+                </tr>
+              </thead>
+              <tbody id="rep-trainers-tbody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Class Occupancy Breakdown -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-calendar-check text-primary"></i> Group Class Seat Utilization</div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table" style="font-size: 0.85rem;">
+              <thead>
+                <tr>
+                  <th>Class Title</th>
+                  <th>Coach</th>
+                  <th>Capacity</th>
+                  <th>Occupancy</th>
+                </tr>
+              </thead>
+              <tbody id="rep-classes-tbody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('report-gen-date').textContent = new Date().toLocaleString();
+      renderReportMetrics();
+      renderReportCharts();
+      renderReportTables();
+    });
+
+    function renderReportMetrics() {
+      const members = DB.get('members');
+      const payments = DB.get('payments');
+      const classes = DB.get('classes');
+
+      let totalRevenue = 0;
+      payments.forEach(p => {
+        if (p.status === 'Paid') totalRevenue += (parseFloat(p.amount) || 0);
+      });
+
+      document.getElementById('rep-total-revenue').textContent = App.formatCurrency(totalRevenue);
+
+      const activeCount = members.filter(m => m.status === 'Active').length;
+      const retention = Math.round((activeCount / members.length) * 100);
+      document.getElementById('rep-retention-rate').textContent = `${retention}%`;
+
+      const arpu = Math.round(totalRevenue / (members.length || 1));
+      document.getElementById('rep-arpu').textContent = App.formatCurrency(arpu);
+
+      // Class occupancy
+      let totalCapacity = 0;
+      let totalBooked = 0;
+      classes.forEach(c => {
+        totalCapacity += c.capacity;
+        totalBooked += c.bookedMembers.length;
+      });
+      const classOcc = Math.round((totalBooked / (totalCapacity || 1)) * 100);
+      document.getElementById('rep-class-occupancy').textContent = `${classOcc}%`;
+    }
+
+    function renderReportCharts() {
+      // 1. Revenue Inflow Chart
+      const revCanvas = document.getElementById('rep-chart-revenue');
+      if (revCanvas) {
+        new Chart(revCanvas, {
+          type: 'line',
+          data: {
+            labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
+            datasets: [{
+              label: 'Collections (EGP)',
+              data: [12500, 15400, 19200, 22100, 24800, 27500, 31900],
+              borderColor: '#ff5e14',
+              backgroundColor: 'rgba(255, 94, 20, 0.1)',
+              fill: true,
+              tension: 0.35,
+              pointBackgroundColor: '#ff5e14'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#9ca3af' } },
+              y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#9ca3af' } }
+            }
+          }
+        });
+      }
+
+      // 2. Revenue by Tier Doughnut
+      const tiersCanvas = document.getElementById('rep-chart-tiers');
+      if (tiersCanvas) {
+        new Chart(tiersCanvas, {
+          type: 'doughnut',
+          data: {
+            labels: ['Basic (500)', 'Pro (1,300)', 'Gold (2,400)', 'VIP Annual (4,500)'],
+            datasets: [{
+              data: [2500, 10400, 12000, 18000],
+              backgroundColor: ['#64748b', '#ff5e14', '#eab308', '#8b5cf6'],
+              borderWidth: 2,
+              borderColor: '#181d29'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { color: '#9ca3af', font: { size: 10 } } }
+            }
+          }
+        });
+      }
+    }
+
+    function renderReportTables() {
+      const trainers = DB.get('trainers');
+      const members = DB.get('members');
+      const classes = DB.get('classes');
+
+      // Trainers
+      const trTbody = document.getElementById('rep-trainers-tbody');
+      if (trTbody) {
+        trTbody.innerHTML = trainers.map(t => {
+          const assigned = members.filter(m => m.assignedTrainerId === t.id).length;
+          return `
+            <tr>
+              <td><strong>${t.name}</strong></td>
+              <td><span class="text-secondary">${t.specialization}</span></td>
+              <td><strong class="text-primary">${assigned} Athletes</strong></td>
+              <td><i class="fa-solid fa-star text-warning"></i> ${t.rating}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Classes
+      const clsTbody = document.getElementById('rep-classes-tbody');
+      if (clsTbody) {
+        clsTbody.innerHTML = classes.map(c => {
+          const occPercent = Math.round((c.bookedMembers.length / c.capacity) * 100);
+          return `
+            <tr>
+              <td><strong>${c.title}</strong></td>
+              <td>${c.trainerName}</td>
+              <td>${c.bookedMembers.length} / ${c.capacity}</td>
+              <td>
+                <span class="badge ${occPercent >= 80 ? 'badge-danger' : 'badge-primary'}">${occPercent}%</span>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+  </script>
+</body>
+</html>

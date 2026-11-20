@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workout Plans & Routines - FITZONE Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="admin-layout">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <div class="brand-text">FIT<span>ZONE</span></div>
+        <span class="brand-sub">Management Suite</span>
+      </div>
+    </div>
+
+    <div class="sidebar-menu">
+      <div class="sidebar-section-title">Core Management</div>
+      <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+      <a href="members.html" class="sidebar-link"><i class="fa-solid fa-users"></i> Members</a>
+      <a href="memberships.html" class="sidebar-link"><i class="fa-solid fa-id-card"></i> Memberships</a>
+      <a href="attendance.html" class="sidebar-link"><i class="fa-solid fa-clock-rotate-left"></i> Attendance</a>
+
+      <div class="sidebar-section-title">Operations & Fitness</div>
+      <a href="trainers.html" class="sidebar-link"><i class="fa-solid fa-user-tie"></i> Trainers</a>
+      <a href="workouts.html" class="sidebar-link active"><i class="fa-solid fa-dumbbell"></i> Workout Plans</a>
+      <a href="classes.html" class="sidebar-link"><i class="fa-solid fa-calendar-days"></i> Classes & Booking</a>
+      <a href="equipment.html" class="sidebar-link"><i class="fa-solid fa-wrench"></i> Equipment</a>
+
+      <div class="sidebar-section-title">Finance & Intelligence</div>
+      <a href="payments.html" class="sidebar-link"><i class="fa-solid fa-receipt"></i> Payments & Billing</a>
+      <a href="reports.html" class="sidebar-link"><i class="fa-solid fa-chart-pie"></i> Reports & Analytics</a>
+      <a href="notifications.html" class="sidebar-link"><i class="fa-solid fa-bell"></i> Notifications</a>
+      <a href="settings.html" class="sidebar-link"><i class="fa-solid fa-gear"></i> Settings</a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="sidebar-user-avatar admin-display-avatar" alt="Admin">
+        <div style="flex: 1; overflow: hidden;">
+          <div class="sidebar-user-name admin-display-name text-truncate">Administrator</div>
+          <div class="sidebar-user-role">Super Admin</div>
+        </div>
+        <button class="btn btn-outline btn-sm btn-icon" title="Logout" onclick="AdminUI.logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Body Content -->
+  <div class="admin-main">
+    <header class="admin-header">
+      <div class="header-left">
+        <button class="mobile-menu-toggle" aria-label="Toggle Navigation"><i class="fa-solid fa-bars"></i></button>
+        <div class="header-title-box">
+          <h1>Workout Plan Templates & Prescriptions</h1>
+          <p>Custom training programs, exercise databases, and member assignment</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="notif-dropdown-wrapper">
+          <button class="notif-btn" onclick="AdminUI.toggleNotifications(event)">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-badge-count" id="admin-notif-count" style="display: none;">0</span>
+          </button>
+          <div class="notif-popover" id="admin-notif-popover">
+            <div class="notif-popover-header">
+              <h4>System Notifications</h4>
+              <button class="btn btn-outline btn-sm" onclick="AdminUI.markAllNotificationsRead()" style="padding: 0.2rem 0.6rem; font-size: 0.72rem;">Mark Read</button>
+            </div>
+            <div class="notif-popover-list" id="admin-notif-list"></div>
+            <div class="notif-popover-footer">
+              <a href="notifications.html" class="text-primary font-bold" style="font-size: 0.8rem;">View All Notifications &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm" onclick="WorkoutsCtrl.openCreatePlanModal()">
+          <i class="fa-solid fa-plus"></i> Create Workout Plan
+        </button>
+      </div>
+    </header>
+
+    <main class="admin-content">
+
+      <!-- Plan Cards Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;" id="workouts-cards-container">
+        <!-- Rendered dynamically by workouts.js -->
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Modal 1: Workout Plan Exercises Details -->
+  <div class="modal" id="workout-details-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <div>
+          <h3 id="plan-detail-title">Workout Routine</h3>
+          <div id="plan-detail-meta" class="text-primary" style="font-size: 0.82rem; font-weight: 600;"></div>
+        </div>
+        <button class="modal-close" onclick="App.closeModal('workout-details-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="background: var(--bg-surface); padding: 1rem 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+          <div class="text-muted" style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700;">Target Goal:</div>
+          <div class="font-bold text-main" id="plan-detail-goal" style="margin-bottom: 0.5rem;"></div>
+          <p class="text-secondary" id="plan-detail-desc" style="font-size: 0.88rem; line-height: 1.5; margin: 0;"></p>
+        </div>
+
+        <div id="plan-exercises-list"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="App.closeModal('workout-details-modal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Assign Workout to Member -->
+  <div class="modal" id="assign-workout-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-user-plus text-primary"></i> Assign Workout Plan</h3>
+        <button class="modal-close" onclick="App.closeModal('assign-workout-modal')">&times;</button>
+      </div>
+      <form onsubmit="WorkoutsCtrl.processAssignment(event)">
+        <div class="modal-body">
+          <input type="hidden" id="assign-plan-id">
+
+          <div style="background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem;">
+            <div class="text-muted" style="font-size: 0.78rem;">Selected Workout:</div>
+            <strong class="text-primary" id="assign-plan-title-display" style="font-size: 1.1rem;"></strong>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Select Gym Member *</label>
+            <select id="assign-workout-member-select" class="form-select" required></select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="App.closeModal('assign-workout-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Assign Plan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Create Custom Workout Plan -->
+  <div class="modal" id="create-workout-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-plus text-primary"></i> Create Workout Routine</h3>
+        <button class="modal-close" onclick="App.closeModal('create-workout-modal')">&times;</button>
+      </div>
+      <form id="create-workout-form" onsubmit="WorkoutsCtrl.saveNewWorkout(event)">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Routine Title *</label>
+              <input type="text" id="new-plan-title" class="form-control" placeholder="e.g. Upper Body Power & Lat Width" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="new-plan-category" class="form-select">
+                <option value="Muscle Building">Muscle Building</option>
+                <option value="Weight Loss">Weight Loss & Cardio</option>
+                <option value="Strength Training">Strength & Power</option>
+                <option value="Beginner">Beginner Conditioning</option>
+                <option value="Mobility">Mobility & Rehab</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Difficulty</label>
+              <select id="new-plan-difficulty" class="form-select">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Days Per Week</label>
+              <input type="number" id="new-plan-days" class="form-control" value="4" min="1" max="7" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Target Goal</label>
+            <input type="text" id="new-plan-goal" class="form-control" placeholder="e.g. Develop scapular retraction and upper pectoral density" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Program Description</label>
+            <textarea id="new-plan-desc" class="form-control" rows="2" placeholder="Overview of sets, intensity and rest period parameters..."></textarea>
+          </div>
+
+          <!-- Exercises Builder -->
+          <div style="margin-top: 1.5rem;">
+            <div class="flex justify-between items-center" style="margin-bottom: 0.75rem;">
+              <h4 style="font-size: 1rem; color: #ffffff;"><i class="fa-solid fa-list-check text-primary"></i> Exercises Sequence</h4>
+              <button type="button" class="btn btn-outline btn-sm" onclick="WorkoutsCtrl.addExerciseRow()">
+                <i class="fa-solid fa-plus"></i> Add Exercise
+              </button>
+            </div>
+
+            <div id="exercise-rows-container"></div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="App.closeModal('create-workout-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Publish Workout Plan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script src="../js/workouts.js"></script>
+</body>
+</html>

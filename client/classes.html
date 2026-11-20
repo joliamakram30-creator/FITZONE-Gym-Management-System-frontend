@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Group Fitness Classes & Schedule - FITZONE</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/client.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="client-navbar">
+    <div class="client-nav-container">
+      <a href="../index.html" class="flex items-center gap-1">
+        <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+        <div class="brand-text">FIT<span>ZONE</span></div>
+      </a>
+
+      <ul class="client-nav-links">
+        <li><a href="../index.html" class="client-nav-link">Home</a></li>
+        <li><a href="plans.html" class="client-nav-link">Memberships</a></li>
+        <li><a href="classes.html" class="client-nav-link active">Classes</a></li>
+        <li><a href="trainers.html" class="client-nav-link">Trainers</a></li>
+        <li><a href="about.html" class="client-nav-link">About</a></li>
+        <li><a href="contact.html" class="client-nav-link">Contact</a></li>
+      </ul>
+
+      <div class="client-nav-actions" id="client-navbar-actions"></div>
+      <button class="client-mobile-toggle" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <div style="background: linear-gradient(180deg, rgba(20, 24, 34, 0.9) 0%, rgba(11, 14, 20, 1) 100%); padding: 4rem 1.5rem 3rem; text-align: center; border-bottom: 1px solid var(--border-subtle);">
+    <div style="max-width: 800px; margin: 0 auto;">
+      <div class="hero-badge"><i class="fa-solid fa-fire text-primary"></i> High Intensity & Mindfulness</div>
+      <h1 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 1rem;">GROUP FITNESS <span class="text-primary">SCHEDULE</span></h1>
+      <p style="color: var(--text-secondary); font-size: 1.05rem;">Book your spot in Cairo's most energetic fitness sessions. Real-time seat allocation ensures small group intimacy and dedicated coach guidance.</p>
+    </div>
+  </div>
+
+  <!-- Classes Section -->
+  <section class="section-wrapper">
+    <!-- Category filter buttons -->
+    <div class="flex justify-center gap-1 flex-wrap" style="margin-bottom: 3rem;" id="classes-filter-bar">
+      <button class="btn btn-primary btn-sm class-filter-btn" onclick="filterClasses('all', this)">All Categories</button>
+      <button class="btn btn-secondary btn-sm class-filter-btn" onclick="filterClasses('CrossFit', this)">CrossFit</button>
+      <button class="btn btn-secondary btn-sm class-filter-btn" onclick="filterClasses('HIIT', this)">HIIT</button>
+      <button class="btn btn-secondary btn-sm class-filter-btn" onclick="filterClasses('Yoga', this)">Yoga</button>
+      <button class="btn btn-secondary btn-sm class-filter-btn" onclick="filterClasses('Zumba', this)">Zumba</button>
+      <button class="btn btn-secondary btn-sm class-filter-btn" onclick="filterClasses('Boxing', this)">Boxing</button>
+      <button class="btn btn-secondary btn-sm class-filter-btn" onclick="filterClasses('Pilates', this)">Pilates</button>
+    </div>
+
+    <!-- Dynamic Classes Grid -->
+    <div class="classes-grid" id="dynamic-classes-container"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="client-footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="flex items-center gap-1" style="margin-bottom: 1rem;">
+          <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+          <div class="brand-text">FIT<span>ZONE</span></div>
+        </div>
+        <p style="font-size: 0.9rem; line-height: 1.6;">Premier Group Fitness Studio in New Cairo.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <ul class="footer-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="plans.html">Membership Plans</a></li>
+          <li><a href="classes.html">Classes Schedule</a></li>
+          <li><a href="trainers.html">Trainers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Member Services</h4>
+        <ul class="footer-links">
+          <li><a href="../login.html">Login</a></li>
+          <li><a href="../register.html">Register Online</a></li>
+          <li><a href="my-dashboard.html">My Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Working Hours</h4>
+        <div style="font-size: 0.88rem; line-height: 1.8;">
+          <p>Sat - Thu: 06:00 AM - 12:00 AM</p>
+          <p>Friday: 08:00 AM - 10:00 PM</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2024 FITZONE Luxury Fitness. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/client.js"></script>
+  <script>
+    function filterClasses(category, btn) {
+      document.querySelectorAll('.class-filter-btn').forEach(b => {
+        b.classList.remove('btn-primary');
+        b.classList.add('btn-secondary');
+      });
+      btn.classList.remove('btn-secondary');
+      btn.classList.add('btn-primary');
+
+      const cards = document.querySelectorAll('.class-card');
+      cards.forEach(card => {
+        const catBadge = card.querySelector('.class-category-badge');
+        if (!catBadge) return;
+        const text = catBadge.textContent.trim();
+        if (category === 'all' || text.toLowerCase() === category.toLowerCase()) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

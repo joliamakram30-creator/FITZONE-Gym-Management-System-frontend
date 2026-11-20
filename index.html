@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FITZONE - Build Your Stronger Self | Luxury Gym & Wellness</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/client.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .hero-stats-strip {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-top: 3.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      animation: fadeInUp 0.8s 0.5s ease both;
+    }
+    .hero-stat {
+      text-align: left;
+    }
+    .hero-stat-num {
+      font-size: 1.9rem;
+      font-weight: 800;
+      font-family: 'Montserrat', sans-serif;
+      line-height: 1.1;
+    }
+    .hero-stat-label {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-top: 0.2rem;
+    }
+    .hero-stat-divider {
+      width: 1px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateX(-50%) translateY(0);
+      }
+      50% {
+        transform: translateX(-50%) translateY(8px);
+      }
+    }
+
+    .footer-social-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: all 0.3s ease;
+      color: var(--text-secondary) !important;
+    }
+    .footer-social-link:hover {
+      border-color: var(--primary);
+      color: var(--primary) !important;
+      transform: translateY(-3px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="client-navbar">
+    <div class="client-nav-container">
+      <a href="index.html" class="flex items-center gap-1">
+        <div class="brand-logo-icon">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <div class="brand-text">FIT<span>ZONE</span></div>
+      </a>
+
+      <ul class="client-nav-links">
+        <li><a href="index.html" class="client-nav-link active">Home</a></li>
+        <li><a href="client/plans.html" class="client-nav-link">Memberships</a></li>
+        <li><a href="client/classes.html" class="client-nav-link">Classes</a></li>
+        <li><a href="client/trainers.html" class="client-nav-link">Trainers</a></li>
+        <li><a href="client/about.html" class="client-nav-link">About</a></li>
+        <li><a href="client/contact.html" class="client-nav-link">Contact</a></li>
+      </ul>
+
+      <div class="client-nav-actions" id="client-navbar-actions">
+        <!-- Injected dynamically by client.js based on auth session -->
+        <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Join FITZONE</a>
+      </div>
+
+      <button class="client-mobile-toggle" aria-label="Toggle menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="client-hero">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <i class="fa-solid fa-fire text-primary"></i> Premier Luxury Fitness in Cairo
+        </div>
+        <h1 class="hero-title">
+          BUILD YOUR<br><span>STRONGER SELF.</span>
+        </h1>
+        <p class="hero-desc">
+          Experience world-class Olympic equipment, custom athletic coaching, recovery cryotherapy, and a community dedicated to unstoppable greatness.
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="register.html" class="btn btn-primary btn-lg">
+            <i class="fa-solid fa-bolt"></i> Join FITZONE Now
+          </a>
+          <a href="#plans" class="btn btn-secondary btn-lg">
+            <i class="fa-solid fa-tags"></i> Explore Memberships
+          </a>
+        </div>
+
+        <!-- Floating Stats Strip -->
+        <div class="hero-stats-strip">
+          <div class="hero-stat">
+            <div class="hero-stat-num">1,200+</div>
+            <div class="hero-stat-label">Active Athletes</div>
+          </div>
+          <div class="hero-stat-divider"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-num text-primary">24 / 7</div>
+            <div class="hero-stat-label">Facility Access</div>
+          </div>
+          <div class="hero-stat-divider"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">50+</div>
+            <div class="hero-stat-label">Weekly Classes</div>
+          </div>
+          <div class="hero-stat-divider"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-num text-primary">100%</div>
+            <div class="hero-stat-label">Certified Masters</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div style="position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); animation: bounce 2s ease-in-out infinite; cursor: pointer; opacity: 0.6;">
+      <i class="fa-solid fa-chevron-down" style="color: #ffffff; font-size: 1.2rem;"></i>
+    </div>
+  </header>
+
+  <!-- Why Choose Us Features Section -->
+  <section class="section-wrapper">
+    <div class="section-header">
+      <div class="section-subtitle">The FITZONE Advantage</div>
+      <h2 class="section-title">ENGINEERED FOR PEAK PERFORMANCE</h2>
+      <p class="section-desc">We combine elite equipment, sports science, and luxury recovery to elevate your fitness journey to unprecedented heights.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon-box">
+          <i class="fa-solid fa-dumbbell"></i>
+        </div>
+        <h3>Olympic & Hammer Strength Zone</h3>
+        <p>Heavy calibrated competition plates, power racks, custom dumbbell sets up to 50kg, and cable crossovers tailored for hypertrophy and power.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-box">
+          <i class="fa-solid fa-heart-pulse"></i>
+        </div>
+        <h3>Metabolic Conditioning & HIIT</h3>
+        <p>Custom turf lanes, Concept2 rowers, assault air bikes, and high-energy group classes designed to supercharge your cardiovascular endurance.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-box">
+          <i class="fa-solid fa-spa"></i>
+        </div>
+        <h3>Cryo, Steam & Sauna Recovery</h3>
+        <p>Accelerate muscle regeneration and ease central nervous fatigue with whole-body cryotherapy chambers, cedar saunas, and sports massage.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-box">
+          <i class="fa-solid fa-user-astronaut"></i>
+        </div>
+        <h3>InBody Diagnostics & Nutrition</h3>
+        <p>State-of-the-art bioelectrical impedance scans and personalized macronutrient meal blueprints aligned precisely with your body goals.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Membership Plans (Dynamic) -->
+  <section class="section-wrapper" id="plans" style="background: rgba(255, 255, 255, 0.01); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+    <div class="section-header">
+      <div class="section-subtitle">Flexible Subscriptions</div>
+      <h2 class="section-title">FIND YOUR PERFECT PASS</h2>
+      <p class="section-desc">Transparent pricing with no hidden registration fees. Every plan includes full access to our premium facilities.</p>
+    </div>
+
+    <!-- Loaded dynamically from LocalStorage DB.plans -->
+    <div class="pricing-grid" id="dynamic-pricing-container">
+      <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem;"></i> Loading membership plans...
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 3rem;">
+      <a href="client/plans.html" class="btn btn-outline">
+        <i class="fa-solid fa-list-check"></i> Compare All Plan Inclusions & Benefits
+      </a>
+    </div>
+  </section>
+
+  <!-- Group Fitness Classes Preview (Dynamic) -->
+  <section class="section-wrapper">
+    <div class="section-header">
+      <div class="section-subtitle">Live Class Schedule</div>
+      <h2 class="section-title">DYNAMIC GROUP FITNESS</h2>
+      <p class="section-desc">From intense CrossFit circuits to mindful Vinyasa Yoga, our master coaches ignite your stamina in an electrifying atmosphere.</p>
+    </div>
+
+    <!-- Loaded dynamically from LocalStorage DB.classes -->
+    <div class="classes-grid" id="dynamic-classes-container"></div>
+
+    <div style="text-align: center; margin-top: 3rem;">
+      <a href="client/classes.html" class="btn btn-primary">
+        <i class="fa-solid fa-calendar-days"></i> View Full Weekly Class Schedule
+      </a>
+    </div>
+  </section>
+
+  <!-- Featured Trainers Section (Dynamic) -->
+  <section class="section-wrapper" style="border-top: 1px solid var(--border-subtle);">
+    <div class="section-header">
+      <div class="section-subtitle">Elite Mentorship</div>
+      <h2 class="section-title">MEET OUR MASTER COACHES</h2>
+      <p class="section-desc">Certified CSCS, IFBB Pro, and RYT-500 trainers with proven track records in athletic transformation.</p>
+    </div>
+
+    <!-- Loaded dynamically from LocalStorage DB.trainers -->
+    <div class="trainers-grid" id="dynamic-trainers-container"></div>
+
+    <div style="text-align: center; margin-top: 3rem;">
+      <a href="client/trainers.html" class="btn btn-outline">
+        <i class="fa-solid fa-user-tie"></i> Learn More About Our Coaches
+      </a>
+    </div>
+  </section>
+
+  <!-- Member Testimonials -->
+  <section class="section-wrapper" style="background: rgba(255, 255, 255, 0.01); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+    <div class="section-header">
+      <div class="section-subtitle">Real Results</div>
+      <h2 class="section-title">ATHLETE SUCCESS STORIES</h2>
+      <p class="section-desc">Hear directly from the members who transformed their bodies and discipline at FITZONE.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="flex items-center gap-1 text-primary" style="margin-bottom: 1rem;">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        </div>
+        <div>
+          <i class="fa-solid fa-quote-left" style="color: rgba(255,94,20,0.3); font-size: 2rem; margin-bottom: 0.75rem; display: block;"></i>
+          <p style="font-style: italic; margin-bottom: 1.5rem; font-size: 0.95rem;">
+            "FITZONE changed my entire perspective on fitness. Captain Omar's strength program took my squat from 100kg to 160kg in six months while staying completely injury-free."
+          </p>
+        </div>
+        <div class="avatar-cell">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" class="avatar-img" alt="Ahmed Mansour">
+          <div>
+            <div class="avatar-info-name">Ahmed Mansour</div>
+            <div class="avatar-info-sub">Pro Fitness Member • New Cairo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="flex items-center gap-1 text-primary" style="margin-bottom: 1rem;">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        </div>
+        <div>
+          <i class="fa-solid fa-quote-left" style="color: rgba(255,94,20,0.3); font-size: 2rem; margin-bottom: 0.75rem; display: block;"></i>
+          <p style="font-style: italic; margin-bottom: 1.5rem; font-size: 0.95rem;">
+            "The cryotherapy suite and Layla's HIIT classes are unmatched anywhere in Egypt. Dropped 8kg of fat and my energy levels at work have skyrocketed!"
+          </p>
+        </div>
+        <div class="avatar-cell">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" class="avatar-img" alt="Mariam Kamal">
+          <div>
+            <div class="avatar-info-name">Mariam Kamal</div>
+            <div class="avatar-info-sub">VIP Annual Member • Maadi</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="flex items-center gap-1 text-primary" style="margin-bottom: 1rem;">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        </div>
+        <div>
+          <i class="fa-solid fa-quote-left" style="color: rgba(255,94,20,0.3); font-size: 2rem; margin-bottom: 0.75rem; display: block;"></i>
+          <p style="font-style: italic; margin-bottom: 1.5rem; font-size: 0.95rem;">
+            "The 24/7 access and seamless digital QR check-in on my phone make working out before late shifts effortless. Truly a luxury commercial experience."
+          </p>
+        </div>
+        <div class="avatar-cell">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100" class="avatar-img" alt="Youssef Ibrahim">
+          <div>
+            <div class="avatar-info-name">Youssef Ibrahim</div>
+            <div class="avatar-info-sub">Gold Athlete • Sheikh Zayed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Big Call to Action Banner -->
+  <section class="section-wrapper" style="text-align: center;">
+    <div style="background: linear-gradient(135deg, rgba(255, 94, 20, 0.12) 0%, rgba(14, 18, 28, 0.95) 100%); border: 1px solid rgba(255,94,20,0.3); box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 0 60px rgba(255,94,20,0.03); border-radius: var(--radius-lg); padding: 4rem 2rem; max-width: 900px; margin: 0 auto;">
+      <div style="width: 50px; height: 3px; background: var(--primary); margin: 0 auto 1.5rem; border-radius: 2px;"></div>
+      <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem;">READY TO CRUSH YOUR GOALS?</h2>
+      <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 2rem; font-size: 1.05rem;">
+        Join over a thousand dedicated athletes today. Sign up online in less than 60 seconds and gain instant access to your digital pass and workout plan.
+      </p>
+      <div class="flex justify-center gap-2 flex-wrap">
+        <a href="register.html" class="btn btn-primary btn-lg">
+          <i class="fa-solid fa-bolt"></i> Claim Your Membership
+        </a>
+        <a href="client/contact.html" class="btn btn-outline btn-lg">
+          <i class="fa-solid fa-phone"></i> Book a Facility Tour
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="client-footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="flex items-center gap-1" style="margin-bottom: 1rem;">
+          <div class="brand-logo-icon">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <div class="brand-text">FIT<span>ZONE</span></div>
+        </div>
+        <p style="font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.5rem;">
+          FITZONE is Cairo's premier destination for luxury athletic conditioning, sports science, and high-performance recovery.
+        </p>
+        <div class="flex gap-2 text-primary" style="font-size: 1.25rem;">
+          <a href="#" class="footer-social-link"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="footer-social-link"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" class="footer-social-link"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#" class="footer-social-link"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <ul class="footer-links">
+          <li><a href="client/plans.html">Membership Plans</a></li>
+          <li><a href="client/classes.html">Group Fitness Classes</a></li>
+          <li><a href="client/trainers.html">Master Coaches</a></li>
+          <li><a href="client/about.html">Gym Facilities</a></li>
+          <li><a href="client/contact.html">Contact & Location</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Member Access</h4>
+        <ul class="footer-links">
+          <li><a href="login.html">Member Portal Login</a></li>
+          <li><a href="register.html">Join Online</a></li>
+          <li><a href="client/my-dashboard.html">Digital Membership Pass</a></li>
+          <li><a href="admin/dashboard.html">Staff & Admin Panel</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Working Hours</h4>
+        <div style="font-size: 0.88rem; line-height: 1.8;">
+          <p><strong class="text-main">Sat – Thu:</strong><br>06:00 AM – 12:00 Midnight</p>
+          <p style="margin-top: 0.5rem;"><strong class="text-main">Friday:</strong><br>08:00 AM – 10:00 PM</p>
+          <p class="text-primary font-bold" style="margin-top: 0.5rem;"><i class="fa-solid fa-key"></i> 24/7 Access for Gold & VIP</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>&copy; 2024 FITZONE Luxury Fitness & Wellness. All rights reserved. Plot 42, North 90th St, New Cairo, Egypt.</div>
+      <div class="flex gap-3">
+        <a href="login.html">Staff Login</a>
+        <a href="client/contact.html">Privacy Policy</a>
+        <a href="client/contact.html">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/client.js"></script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Members Management - FITZONE Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="admin-layout">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <div class="brand-text">FIT<span>ZONE</span></div>
+        <span class="brand-sub">Management Suite</span>
+      </div>
+    </div>
+
+    <div class="sidebar-menu">
+      <div class="sidebar-section-title">Core Management</div>
+      <a href="dashboard.html" class="sidebar-link">
+        <i class="fa-solid fa-gauge-high"></i> Dashboard
+      </a>
+      <a href="members.html" class="sidebar-link active">
+        <i class="fa-solid fa-users"></i> Members
+      </a>
+      <a href="memberships.html" class="sidebar-link">
+        <i class="fa-solid fa-id-card"></i> Memberships
+      </a>
+      <a href="attendance.html" class="sidebar-link">
+        <i class="fa-solid fa-clock-rotate-left"></i> Attendance
+      </a>
+
+      <div class="sidebar-section-title">Operations & Fitness</div>
+      <a href="trainers.html" class="sidebar-link">
+        <i class="fa-solid fa-user-tie"></i> Trainers
+      </a>
+      <a href="workouts.html" class="sidebar-link">
+        <i class="fa-solid fa-dumbbell"></i> Workout Plans
+      </a>
+      <a href="classes.html" class="sidebar-link">
+        <i class="fa-solid fa-calendar-days"></i> Classes & Booking
+      </a>
+      <a href="equipment.html" class="sidebar-link">
+        <i class="fa-solid fa-wrench"></i> Equipment
+      </a>
+
+      <div class="sidebar-section-title">Finance & Intelligence</div>
+      <a href="payments.html" class="sidebar-link">
+        <i class="fa-solid fa-receipt"></i> Payments & Billing
+      </a>
+      <a href="reports.html" class="sidebar-link">
+        <i class="fa-solid fa-chart-pie"></i> Reports & Analytics
+      </a>
+      <a href="notifications.html" class="sidebar-link">
+        <i class="fa-solid fa-bell"></i> Notifications
+      </a>
+      <a href="settings.html" class="sidebar-link">
+        <i class="fa-solid fa-gear"></i> Settings
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="sidebar-user-avatar admin-display-avatar" alt="Admin">
+        <div style="flex: 1; overflow: hidden;">
+          <div class="sidebar-user-name admin-display-name text-truncate">Administrator</div>
+          <div class="sidebar-user-role">Super Admin</div>
+        </div>
+        <button class="btn btn-outline btn-sm btn-icon" title="Logout" onclick="AdminUI.logout()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Body Content -->
+  <div class="admin-main">
+    <header class="admin-header">
+      <div class="header-left">
+        <button class="mobile-menu-toggle" aria-label="Toggle Navigation"><i class="fa-solid fa-bars"></i></button>
+        <div class="header-title-box">
+          <h1>Gym Members Directory</h1>
+          <p>Comprehensive CRUD member records, profiles, and attendance tracking</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="notif-dropdown-wrapper">
+          <button class="notif-btn" onclick="AdminUI.toggleNotifications(event)">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-badge-count" id="admin-notif-count" style="display: none;">0</span>
+          </button>
+          <div class="notif-popover" id="admin-notif-popover">
+            <div class="notif-popover-header">
+              <h4>System Notifications</h4>
+              <button class="btn btn-outline btn-sm" onclick="AdminUI.markAllNotificationsRead()" style="padding: 0.2rem 0.6rem; font-size: 0.72rem;">Mark Read</button>
+            </div>
+            <div class="notif-popover-list" id="admin-notif-list"></div>
+            <div class="notif-popover-footer">
+              <a href="notifications.html" class="text-primary font-bold" style="font-size: 0.8rem;">View All Notifications &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm" onclick="MembersCtrl.openAddModal()">
+          <i class="fa-solid fa-user-plus"></i> Add New Member
+        </button>
+      </div>
+    </header>
+
+    <main class="admin-content">
+
+      <!-- Action & Search Toolbar -->
+      <div class="toolbar-bar card">
+        <div class="toolbar-search-filter">
+          <!-- Search -->
+          <div style="position: relative; min-width: 260px;">
+            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+            <input type="text" id="member-search-input" class="form-control" placeholder="Search by name, ID, phone..." style="padding-left: 2.4rem;">
+          </div>
+
+          <!-- Status Filter -->
+          <select id="filter-status-select" class="form-select" style="min-width: 150px;">
+            <option value="all">All Statuses</option>
+            <option value="Active">Active Only</option>
+            <option value="Expired">Expired</option>
+          </select>
+
+          <!-- Plan Filter -->
+          <select id="filter-plan-select" class="form-select" style="min-width: 160px;">
+            <option value="all">All Plans</option>
+          </select>
+        </div>
+
+        <div class="toolbar-actions">
+          <span class="badge badge-secondary" id="members-total-count" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">0 Members</span>
+        </div>
+      </div>
+
+      <!-- Members Data Table -->
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Member Details</th>
+                <th>Contact</th>
+                <th>Plan Tier</th>
+                <th>Dates (Start - Exp)</th>
+                <th>Assigned Trainer</th>
+                <th>Status</th>
+                <th class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="members-table-body">
+              <!-- Rendered dynamically by members.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="flex items-center justify-between" style="padding: 1rem 1.5rem; background: var(--bg-surface); border-top: 1px solid var(--border-subtle);">
+          <div class="text-muted" style="font-size: 0.85rem;">Showing paginated members database</div>
+          <div id="members-pagination"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Modal 1: Add / Edit Member Modal -->
+  <div class="modal" id="member-form-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3 id="member-modal-title"><i class="fa-solid fa-user-plus text-primary"></i> Add New Gym Member</h3>
+        <button class="modal-close" onclick="App.closeModal('member-form-modal')">&times;</button>
+      </div>
+      <form id="member-form" onsubmit="MembersCtrl.saveMember(event)">
+        <div class="modal-body">
+          <input type="hidden" id="member-id-field">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" id="member-name" class="form-control" placeholder="e.g. Omar Mansour" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address *</label>
+              <input type="email" id="member-email" class="form-control" placeholder="omar@gmail.com" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Phone Number *</label>
+              <input type="tel" id="member-phone" class="form-control" placeholder="+20 100 123 4567" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Gender</label>
+              <select id="member-gender" class="form-select">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date of Birth</label>
+              <input type="date" id="member-dob" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Residential Address</label>
+            <input type="text" id="member-address" class="form-control" placeholder="e.g. 5th Settlement, New Cairo, Egypt">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Membership Plan *</label>
+              <select id="member-plan-select" class="form-select" required>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Start Date *</label>
+              <input type="date" id="member-start-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Expiration Date (Calculated) *</label>
+              <input type="date" id="member-exp-date" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="member-status-select" class="form-select">
+                <option value="Active">Active</option>
+                <option value="Expired">Expired</option>
+                <option value="Frozen">Frozen</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Assigned Coach</label>
+              <select id="member-trainer-select" class="form-select">
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Workout Routine</label>
+              <select id="member-workout-select" class="form-select">
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Avatar Image URL (Optional)</label>
+            <input type="url" id="member-photo-url" class="form-control" placeholder="https://images.unsplash.com/...">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="App.closeModal('member-form-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Member</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: View Member Details Drawer / Profile -->
+  <div class="modal" id="member-details-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <div class="flex items-center gap-2">
+          <h3 id="view-member-name">Member Profile</h3>
+          <span class="font-mono text-primary font-bold" id="view-member-id" style="font-size: 1rem;"></span>
+          <span id="view-member-status"></span>
+        </div>
+        <button class="modal-close" onclick="App.closeModal('member-details-modal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Top Profile Banner -->
+        <div class="flex items-center gap-3" style="background: var(--bg-surface); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+          <img id="view-member-photo" src="" alt="Member" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
+          <div style="flex: 1;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.5rem; font-size: 0.88rem;">
+              <div><strong>Email:</strong> <span id="view-member-email" class="text-secondary"></span></div>
+              <div><strong>Phone:</strong> <span id="view-member-phone" class="text-secondary"></span></div>
+              <div><strong>Gender:</strong> <span id="view-member-gender" class="text-secondary"></span></div>
+              <div><strong>DOB:</strong> <span id="view-member-dob" class="text-secondary"></span></div>
+              <div><strong>Joined:</strong> <span id="view-member-reg" class="text-secondary"></span></div>
+              <div><strong>Location:</strong> <span id="view-member-address" class="text-secondary"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plan & Coaching Card -->
+        <div class="card" style="margin-bottom: 1.5rem; background: var(--bg-card);">
+          <div class="flex justify-between items-center" style="margin-bottom: 0.85rem;">
+            <div class="font-bold text-main"><i class="fa-solid fa-id-card text-primary"></i> Current Subscription</div>
+            <button class="btn btn-primary btn-sm" id="modal-renew-member-btn">
+              <i class="fa-solid fa-arrows-rotate"></i> Renew Membership
+            </button>
+          </div>
+
+          <div class="form-row" style="font-size: 0.88rem;">
+            <div>Plan: <strong id="view-member-plan" class="text-primary font-bold"></strong></div>
+            <div>Start: <span id="view-member-start"></span></div>
+            <div>Expires: <strong id="view-member-expire"></strong></div>
+            <div>Coach: <span id="view-member-trainer"></span></div>
+            <div>Routine: <span id="view-member-workout"></span></div>
+          </div>
+        </div>
+
+        <!-- Attendance History Tab Section -->
+        <div style="margin-bottom: 1.5rem;">
+          <h4 style="font-size: 1rem; margin-bottom: 0.75rem; color: #ffffff;"><i class="fa-solid fa-clock-rotate-left text-info"></i> Attendance Logs</h4>
+          <div id="view-member-attendance-list" style="max-height: 200px; overflow-y: auto;"></div>
+        </div>
+
+        <!-- Payments History Tab Section -->
+        <div>
+          <h4 style="font-size: 1rem; margin-bottom: 0.75rem; color: #ffffff;"><i class="fa-solid fa-receipt text-success"></i> Payment History</h4>
+          <div id="view-member-payments-list" style="max-height: 200px; overflow-y: auto;"></div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="App.closeModal('member-details-modal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Renew Membership Modal -->
+  <div class="modal" id="renew-membership-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-arrows-rotate text-primary"></i> Renew Subscription</h3>
+        <button class="modal-close" onclick="App.closeModal('renew-membership-modal')">&times;</button>
+      </div>
+      <form onsubmit="MembersCtrl.processRenewal(event)">
+        <div class="modal-body">
+          <input type="hidden" id="renew-member-id">
+          
+          <div style="background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem;">
+            <div>Member: <strong id="renew-member-name" class="text-main"></strong></div>
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Current Expiration: <span id="renew-current-exp"></span></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Select Plan Tier *</label>
+            <select id="renew-plan-select" class="form-select" required></select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Payment Method *</label>
+            <select id="renew-payment-method" class="form-select">
+              <option value="Visa Card">Visa Card</option>
+              <option value="Mastercard">Mastercard</option>
+              <option value="Cash">Cash at Reception</option>
+              <option value="InstaPay">InstaPay Bank Transfer</option>
+              <option value="Vodafone Cash">Vodafone Cash Wallet</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="App.closeModal('renew-membership-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-circle-check"></i> Process Renewal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script src="../js/members.js"></script>
+  <script>
+    // Check if opened with ?action=new
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('action') === 'new') {
+        MembersCtrl.openAddModal();
+      }
+    });
+  </script>
+</body>
+</html>

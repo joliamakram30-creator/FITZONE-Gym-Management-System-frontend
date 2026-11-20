@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trainers & Coaches - FITZONE Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="admin-layout">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <div class="brand-text">FIT<span>ZONE</span></div>
+        <span class="brand-sub">Management Suite</span>
+      </div>
+    </div>
+
+    <div class="sidebar-menu">
+      <div class="sidebar-section-title">Core Management</div>
+      <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+      <a href="members.html" class="sidebar-link"><i class="fa-solid fa-users"></i> Members</a>
+      <a href="memberships.html" class="sidebar-link"><i class="fa-solid fa-id-card"></i> Memberships</a>
+      <a href="attendance.html" class="sidebar-link"><i class="fa-solid fa-clock-rotate-left"></i> Attendance</a>
+
+      <div class="sidebar-section-title">Operations & Fitness</div>
+      <a href="trainers.html" class="sidebar-link active"><i class="fa-solid fa-user-tie"></i> Trainers</a>
+      <a href="workouts.html" class="sidebar-link"><i class="fa-solid fa-dumbbell"></i> Workout Plans</a>
+      <a href="classes.html" class="sidebar-link"><i class="fa-solid fa-calendar-days"></i> Classes & Booking</a>
+      <a href="equipment.html" class="sidebar-link"><i class="fa-solid fa-wrench"></i> Equipment</a>
+
+      <div class="sidebar-section-title">Finance & Intelligence</div>
+      <a href="payments.html" class="sidebar-link"><i class="fa-solid fa-receipt"></i> Payments & Billing</a>
+      <a href="reports.html" class="sidebar-link"><i class="fa-solid fa-chart-pie"></i> Reports & Analytics</a>
+      <a href="notifications.html" class="sidebar-link"><i class="fa-solid fa-bell"></i> Notifications</a>
+      <a href="settings.html" class="sidebar-link"><i class="fa-solid fa-gear"></i> Settings</a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="sidebar-user-avatar admin-display-avatar" alt="Admin">
+        <div style="flex: 1; overflow: hidden;">
+          <div class="sidebar-user-name admin-display-name text-truncate">Administrator</div>
+          <div class="sidebar-user-role">Super Admin</div>
+        </div>
+        <button class="btn btn-outline btn-sm btn-icon" title="Logout" onclick="AdminUI.logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Body Content -->
+  <div class="admin-main">
+    <header class="admin-header">
+      <div class="header-left">
+        <button class="mobile-menu-toggle" aria-label="Toggle Navigation"><i class="fa-solid fa-bars"></i></button>
+        <div class="header-title-box">
+          <h1>Master Coaching Staff</h1>
+          <p>Personal trainer profiles, athlete allocations, and shift schedules</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="notif-dropdown-wrapper">
+          <button class="notif-btn" onclick="AdminUI.toggleNotifications(event)">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-badge-count" id="admin-notif-count" style="display: none;">0</span>
+          </button>
+          <div class="notif-popover" id="admin-notif-popover">
+            <div class="notif-popover-header">
+              <h4>System Notifications</h4>
+              <button class="btn btn-outline btn-sm" onclick="AdminUI.markAllNotificationsRead()" style="padding: 0.2rem 0.6rem; font-size: 0.72rem;">Mark Read</button>
+            </div>
+            <div class="notif-popover-list" id="admin-notif-list"></div>
+            <div class="notif-popover-footer">
+              <a href="notifications.html" class="text-primary font-bold" style="font-size: 0.8rem;">View All Notifications &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm" onclick="openTrainerModal()">
+          <i class="fa-solid fa-user-plus"></i> Add New Coach
+        </button>
+      </div>
+    </header>
+
+    <main class="admin-content">
+
+      <!-- Trainers Cards Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;" id="admin-trainers-container">
+        <!-- Rendered dynamically -->
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Modal: Add / Edit Trainer -->
+  <div class="modal" id="trainer-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="trainer-modal-title"><i class="fa-solid fa-user-tie text-primary"></i> Coach Profile</h3>
+        <button class="modal-close" onclick="App.closeModal('trainer-modal')">&times;</button>
+      </div>
+      <form onsubmit="handleSaveTrainer(event)">
+        <div class="modal-body">
+          <input type="hidden" id="trainer-id-input">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" id="trainer-name-input" class="form-control" placeholder="Captain ..." required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Specialization *</label>
+              <input type="text" id="trainer-spec-input" class="form-control" placeholder="e.g. Olympic Weightlifting" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Email Address *</label>
+              <input type="email" id="trainer-email-input" class="form-control" placeholder="coach@fitzone.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number *</label>
+              <input type="tel" id="trainer-phone-input" class="form-control" placeholder="+20 100 ..." required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Experience (Years)</label>
+              <input type="number" id="trainer-exp-input" class="form-control" value="5" min="1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Working Hours / Shift</label>
+              <input type="text" id="trainer-hours-input" class="form-control" placeholder="08:00 AM - 04:00 PM" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="trainer-avail-input" class="form-select">
+                <option value="Available">Available</option>
+                <option value="Busy">Busy</option>
+                <option value="On Leave">On Leave</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Bio & Credentials</label>
+            <textarea id="trainer-bio-input" class="form-control" rows="3" placeholder="Certifications, athletic background..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Photo URL</label>
+            <input type="url" id="trainer-photo-input" class="form-control" placeholder="https://images.unsplash.com/...">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="App.closeModal('trainer-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Coach</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTrainers();
+    });
+
+    function renderTrainers() {
+      const container = document.getElementById('admin-trainers-container');
+      if (!container) return;
+
+      const trainers = DB.get('trainers');
+      const members = DB.get('members');
+
+      container.innerHTML = trainers.map(t => {
+        const assignedMembers = members.filter(m => m.assignedTrainerId === t.id);
+
+        return `
+          <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div class="flex items-center gap-3" style="margin-bottom: 1.25rem;">
+                <img src="${t.image}" alt="${t.name}" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
+                <div style="flex: 1;">
+                  <h3 style="font-size: 1.2rem; color: #ffffff; margin-bottom: 2px;">${t.name}</h3>
+                  <div class="text-primary font-semibold" style="font-size: 0.82rem;">${t.specialization}</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">${t.id}</div>
+                </div>
+                ${App.statusBadge(t.availability)}
+              </div>
+
+              <p class="text-secondary" style="font-size: 0.85rem; line-height: 1.5; margin-bottom: 1rem;">${t.bio}</p>
+
+              <div style="background: var(--bg-surface); padding: 0.85rem; border-radius: var(--radius-md); font-size: 0.82rem; margin-bottom: 1.25rem;">
+                <div class="flex justify-between" style="margin-bottom: 0.35rem;">
+                  <span class="text-muted"><i class="fa-solid fa-envelope"></i> Email:</span>
+                  <span class="font-bold">${t.email}</span>
+                </div>
+                <div class="flex justify-between" style="margin-bottom: 0.35rem;">
+                  <span class="text-muted"><i class="fa-solid fa-phone"></i> Phone:</span>
+                  <span class="font-bold">${t.phone}</span>
+                </div>
+                <div class="flex justify-between" style="margin-bottom: 0.35rem;">
+                  <span class="text-muted"><i class="fa-solid fa-clock"></i> Hours:</span>
+                  <span>${t.workingHours}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-muted"><i class="fa-solid fa-users"></i> Athletes:</span>
+                  <strong class="text-primary">${assignedMembers.length} Members Assigned</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex gap-2">
+              <button class="btn btn-outline btn-sm flex-1" onclick="openEditTrainerModal('${t.id}')">
+                <i class="fa-solid fa-pen"></i> Edit Profile
+              </button>
+              <button class="btn btn-outline btn-sm text-danger" title="Delete Trainer" onclick="deleteTrainer('${t.id}')">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openTrainerModal() {
+      document.getElementById('trainer-modal-title').textContent = "Add Master Coach";
+      document.getElementById('trainer-id-input').value = "";
+      document.getElementById('trainer-name-input').value = "";
+      document.getElementById('trainer-spec-input').value = "";
+      document.getElementById('trainer-email-input').value = "";
+      document.getElementById('trainer-phone-input').value = "";
+      document.getElementById('trainer-exp-input').value = "5";
+      document.getElementById('trainer-hours-input').value = "09:00 AM - 05:00 PM";
+      document.getElementById('trainer-avail-input').value = "Available";
+      document.getElementById('trainer-bio-input').value = "";
+      document.getElementById('trainer-photo-input').value = "";
+
+      App.openModal('trainer-modal');
+    }
+
+    function openEditTrainerModal(id) {
+      const t = DB.getById('trainers', id);
+      if (!t) return;
+
+      document.getElementById('trainer-modal-title').textContent = `Edit Coach: ${t.name}`;
+      document.getElementById('trainer-id-input').value = t.id;
+      document.getElementById('trainer-name-input').value = t.name;
+      document.getElementById('trainer-spec-input').value = t.specialization;
+      document.getElementById('trainer-email-input').value = t.email;
+      document.getElementById('trainer-phone-input').value = t.phone;
+      document.getElementById('trainer-exp-input').value = t.experienceYears || 5;
+      document.getElementById('trainer-hours-input').value = t.workingHours;
+      document.getElementById('trainer-avail-input').value = t.availability || "Available";
+      document.getElementById('trainer-bio-input').value = t.bio || "";
+      document.getElementById('trainer-photo-input').value = t.image || "";
+
+      App.openModal('trainer-modal');
+    }
+
+    function handleSaveTrainer(e) {
+      e.preventDefault();
+      const id = document.getElementById('trainer-id-input').value;
+      const name = document.getElementById('trainer-name-input').value.trim();
+      const specialization = document.getElementById('trainer-spec-input').value.trim();
+      const email = document.getElementById('trainer-email-input').value.trim();
+      const phone = document.getElementById('trainer-phone-input').value.trim();
+      const experienceYears = parseInt(document.getElementById('trainer-exp-input').value, 10) || 5;
+      const workingHours = document.getElementById('trainer-hours-input').value.trim();
+      const availability = document.getElementById('trainer-avail-input').value;
+      const bio = document.getElementById('trainer-bio-input').value.trim();
+      const photo = document.getElementById('trainer-photo-input').value.trim();
+
+      if (id) {
+        DB.update('trainers', id, {
+          name, specialization, email, phone, experienceYears, workingHours, availability, bio,
+          image: photo || 'https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=600'
+        });
+        App.showToast(`Coach ${name} updated successfully!`, "success");
+      } else {
+        const newCoach = {
+          id: `TR-${Math.floor(100 + Math.random() * 900)}`,
+          name, specialization, email, phone, experienceYears, workingHours, availability, bio,
+          image: photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600',
+          rating: 4.9,
+          assignedCount: 0
+        };
+        DB.add('trainers', newCoach);
+        App.showToast(`New coach ${name} added!`, "success");
+      }
+
+      App.closeModal('trainer-modal');
+      renderTrainers();
+    }
+
+    function deleteTrainer(id) {
+      const t = DB.getById('trainers', id);
+      if (!t) return;
+
+      App.confirm(
+        `Remove Coach ${t.name}?`,
+        `Are you sure you want to delete ${t.name}? Members assigned will be set to unassigned.`,
+        () => {
+          DB.delete('trainers', id);
+          App.showToast(`Coach ${t.name} removed.`, "success");
+          renderTrainers();
+        }
+      );
+    }
+  </script>
+</body>
+</html>

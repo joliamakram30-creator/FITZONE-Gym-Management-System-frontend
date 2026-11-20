@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Membership Plans & Pricing - FITZONE Cairo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/client.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="client-navbar">
+    <div class="client-nav-container">
+      <a href="../index.html" class="flex items-center gap-1">
+        <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+        <div class="brand-text">FIT<span>ZONE</span></div>
+      </a>
+
+      <ul class="client-nav-links">
+        <li><a href="../index.html" class="client-nav-link">Home</a></li>
+        <li><a href="plans.html" class="client-nav-link active">Memberships</a></li>
+        <li><a href="classes.html" class="client-nav-link">Classes</a></li>
+        <li><a href="trainers.html" class="client-nav-link">Trainers</a></li>
+        <li><a href="about.html" class="client-nav-link">About</a></li>
+        <li><a href="contact.html" class="client-nav-link">Contact</a></li>
+      </ul>
+
+      <div class="client-nav-actions" id="client-navbar-actions">
+        <!-- Injected dynamically -->
+      </div>
+
+      <button class="client-mobile-toggle" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <div style="background: linear-gradient(180deg, rgba(20, 24, 34, 0.9) 0%, rgba(11, 14, 20, 1) 100%); padding: 4rem 1.5rem 3rem; text-align: center; border-bottom: 1px solid var(--border-subtle);">
+    <div style="max-width: 800px; margin: 0 auto;">
+      <div class="hero-badge"><i class="fa-solid fa-tags"></i> Investment in Your Strength</div>
+      <h1 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 1rem;">MEMBERSHIP <span class="text-primary">PLANS</span></h1>
+      <p style="color: var(--text-secondary); font-size: 1.05rem;">Choose the tier that matches your athletic ambition. Full transparent pricing in Egyptian Pounds (EGP) with zero hidden administrative fees.</p>
+    </div>
+  </div>
+
+  <!-- Dynamic Pricing Cards Grid -->
+  <section class="section-wrapper">
+    <div class="pricing-grid" id="dynamic-pricing-container">
+      <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
+        <i class="fa-solid fa-spinner fa-spin"></i> Loading plans...
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison Table -->
+  <section class="section-wrapper" style="border-top: 1px solid var(--border-subtle);">
+    <div class="section-header">
+      <div class="section-subtitle">Side-by-Side Comparison</div>
+      <h2 class="section-title">DETAILED PLAN FEATURES</h2>
+      <p class="section-desc">Compare every amenity, booking privilege, and recovery feature across our four membership levels.</p>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table" style="font-size: 0.92rem;">
+        <thead>
+          <tr>
+            <th style="width: 32%;">Feature / Benefit</th>
+            <th class="text-center">Basic Fitness</th>
+            <th class="text-center" style="color: var(--primary);">Pro Fitness</th>
+            <th class="text-center" style="color: #eab308;">Gold Athlete</th>
+            <th class="text-center" style="color: #8b5cf6;">Elite VIP Annual</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Gym Floor & Machine Access</td>
+            <td class="text-center"><i class="fa-solid fa-check text-success"></i> Off-Peak</td>
+            <td class="text-center"><i class="fa-solid fa-check text-success"></i> 24/7 Full</td>
+            <td class="text-center"><i class="fa-solid fa-check text-success"></i> 24/7 Full</td>
+            <td class="text-center"><i class="fa-solid fa-check text-success"></i> 24/7 VIP Priority</td>
+          </tr>
+          <tr>
+            <td>Group Fitness Classes (HIIT, Yoga, Zumba)</td>
+            <td class="text-center text-muted"><i class="fa-solid fa-xmark"></i></td>
+            <td class="text-center"><i class="fa-solid fa-check text-success"></i> Unlimited</td>
+            <td class="text-center"><i class="fa-solid fa-check text-success"></i> Unlimited</td>
+            <td class="text-center"><i class="fa-solid fa-check text-success"></i> Priority Booking</td>
+          </tr>
+          <tr>
+            <td>Locker & Shower Facilities</td>
+            <td class="text-center">Standard</td>
+            <td class="text-center">Dedicated Lockers</td>
+            <td class="text-center">Private Lockers</td>
+            <td class="text-center">VIP Locker & Towel Service</td>
+          </tr>
+          <tr>
+            <td>Spa, Sauna & Steam Rooms</td>
+            <td class="text-center text-muted"><i class="fa-solid fa-xmark"></i></td>
+            <td class="text-center"><i class="fa-solid fa-check text-success"></i> Sauna Only</td>
+            <td class="text-center"><i class="fa-solid fa-check text-success"></i> Full Spa Access</td>
+            <td class="text-center"><i class="fa-solid fa-check text-success"></i> Cryo & Massage Suite</td>
+          </tr>
+          <tr>
+            <td>Personal Trainer Sessions</td>
+            <td class="text-center text-muted"><i class="fa-solid fa-xmark"></i></td>
+            <td class="text-center">2 Free Sessions</td>
+            <td class="text-center">5 PT Sessions</td>
+            <td class="text-center">12 PT Sessions Included</td>
+          </tr>
+          <tr>
+            <td>InBody Body Composition Scans</td>
+            <td class="text-center">1 Initial Scan</td>
+            <td class="text-center">Monthly</td>
+            <td class="text-center">Bi-Weekly</td>
+            <td class="text-center">Unlimited On-Demand</td>
+          </tr>
+          <tr>
+            <td>Guest Passes Included</td>
+            <td class="text-center text-muted">None</td>
+            <td class="text-center">1 Pass / Month</td>
+            <td class="text-center">2 Passes / Month</td>
+            <td class="text-center">Unlimited (1 per visit)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section-wrapper" style="border-top: 1px solid var(--border-subtle); max-width: 860px;">
+    <div class="section-header">
+      <div class="section-subtitle">Common Inquiries</div>
+      <h2 class="section-title">FREQUENTLY ASKED QUESTIONS</h2>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+      <div class="card">
+        <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: #ffffff;"><i class="fa-solid fa-circle-question text-primary"></i> Can I freeze my membership if I travel?</h4>
+        <p class="text-secondary" style="font-size: 0.9rem;">Yes! 3-month and 6-month plans can be frozen for up to 14 days, and Annual memberships can be frozen for up to 30 days without any penalty.</p>
+      </div>
+      <div class="card">
+        <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: #ffffff;"><i class="fa-solid fa-circle-question text-primary"></i> What payment methods do you accept in Egypt?</h4>
+        <p class="text-secondary" style="font-size: 0.9rem;">We accept Visa, Mastercard, Cash at reception, InstaPay transfers, and Vodafone Cash mobile wallet payments.</p>
+      </div>
+      <div class="card">
+        <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: #ffffff;"><i class="fa-solid fa-circle-question text-primary"></i> How do I access the gym using my digital card?</h4>
+        <p class="text-secondary" style="font-size: 0.9rem;">Once you join, simply open your FITZONE Member Portal on your smartphone. The reception scanner reads your dynamic QR code instantly upon entry.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="client-footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="flex items-center gap-1" style="margin-bottom: 1rem;">
+          <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+          <div class="brand-text">FIT<span>ZONE</span></div>
+        </div>
+        <p style="font-size: 0.9rem; line-height: 1.6;">Cairo's premier luxury gym and athletic training facility.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <ul class="footer-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="plans.html">Membership Plans</a></li>
+          <li><a href="classes.html">Fitness Classes</a></li>
+          <li><a href="trainers.html">Master Coaches</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Member Services</h4>
+        <ul class="footer-links">
+          <li><a href="../login.html">Login</a></li>
+          <li><a href="../register.html">Register Online</a></li>
+          <li><a href="my-dashboard.html">Member Portal</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Location</h4>
+        <p style="font-size: 0.88rem; line-height: 1.7; color: var(--text-secondary);">
+          Plot 42, North 90th St, New Cairo, Egypt<br>
+          Phone: +20 2 2795 4400
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2024 FITZONE Luxury Fitness. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/client.js"></script>
+</body>
+</html>

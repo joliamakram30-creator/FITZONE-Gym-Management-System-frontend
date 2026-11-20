@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile Settings - FITZONE</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/client.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="client-navbar">
+    <div class="client-nav-container">
+      <a href="../index.html" class="flex items-center gap-1">
+        <div class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></div>
+        <div class="brand-text">FIT<span>ZONE</span></div>
+      </a>
+
+      <ul class="client-nav-links">
+        <li><a href="../index.html" class="client-nav-link">Home</a></li>
+        <li><a href="plans.html" class="client-nav-link">Memberships</a></li>
+        <li><a href="classes.html" class="client-nav-link">Classes</a></li>
+        <li><a href="trainers.html" class="client-nav-link">Trainers</a></li>
+        <li><a href="about.html" class="client-nav-link">About</a></li>
+        <li><a href="contact.html" class="client-nav-link">Contact</a></li>
+      </ul>
+
+      <div class="client-nav-actions" id="client-navbar-actions"></div>
+      <button class="client-mobile-toggle" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <!-- Profile Settings Section -->
+  <section class="section-wrapper" style="max-width: 850px;">
+    <div class="flex items-center justify-between" style="margin-bottom: 2rem;">
+      <div>
+        <h1 style="font-size: 2rem; font-weight: 800;">PROFILE & SETTINGS</h1>
+        <p class="text-secondary" style="font-size: 0.9rem;">Manage your member profile details and account security.</p>
+      </div>
+      <a href="my-dashboard.html" class="btn btn-outline btn-sm">
+        <i class="fa-solid fa-id-card"></i> Member Portal
+      </a>
+    </div>
+
+    <div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+      <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; color: #ffffff;"><i class="fa-solid fa-user-pen text-primary"></i> Personal Information</h3>
+
+      <form onsubmit="handleUpdateProfile(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="prof-name" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address (Read-only)</label>
+            <input type="email" id="prof-email" class="form-control" readonly style="opacity: 0.7; cursor: not-allowed;">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" id="prof-phone" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date of Birth</label>
+            <input type="date" id="prof-dob" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Residential Address</label>
+          <input type="text" id="prof-address" class="form-control" placeholder="District, City, Cairo">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">
+          <i class="fa-solid fa-floppy-disk"></i> Save Profile Changes
+        </button>
+      </form>
+    </div>
+
+    <div class="card" style="padding: 2rem;">
+      <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; color: #ffffff;"><i class="fa-solid fa-lock text-primary"></i> Security & Password</h3>
+
+      <form onsubmit="handleChangePassword(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input type="password" id="prof-new-pass" class="form-control" placeholder="Min. 6 characters" minlength="6" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm New Password</label>
+            <input type="password" id="prof-confirm-pass" class="form-control" placeholder="Repeat new password" minlength="6" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-secondary">
+          <i class="fa-solid fa-key"></i> Update Password
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="client-footer">
+    <div class="footer-bottom" style="border: none; padding: 0;">
+      <div>&copy; 2024 FITZONE Luxury Fitness. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = Auth.getCurrentUser();
+      if (!user) {
+        window.location.href = '../login.html';
+        return;
+      }
+
+      const member = DB.getById('members', user.memberId) || DB.get('members')[0];
+      if (member) {
+        document.getElementById('prof-name').value = member.name || user.name || '';
+        document.getElementById('prof-email').value = member.email || user.email || '';
+        document.getElementById('prof-phone').value = member.phone || '';
+        document.getElementById('prof-dob').value = member.dob || '';
+        document.getElementById('prof-address').value = member.address || '';
+      }
+    });
+
+    function handleUpdateProfile(e) {
+      e.preventDefault();
+      const user = Auth.getCurrentUser();
+      if (!user) return;
+
+      const name = document.getElementById('prof-name').value.trim();
+      const phone = document.getElementById('prof-phone').value.trim();
+      const dob = document.getElementById('prof-dob').value;
+      const address = document.getElementById('prof-address').value.trim();
+
+      if (user.memberId) {
+        DB.update('members', user.memberId, { name, phone, dob, address });
+      }
+
+      user.name = name;
+      Auth.setSession(user);
+
+      App.showToast("Your profile details have been saved!", "success");
+    }
+
+    function handleChangePassword(e) {
+      e.preventDefault();
+      const p1 = document.getElementById('prof-new-pass').value;
+      const p2 = document.getElementById('prof-confirm-pass').value;
+
+      if (p1 !== p2) {
+        App.showToast("Passwords do not match.", "error");
+        return;
+      }
+
+      const user = Auth.getCurrentUser();
+      if (user) {
+        DB.update('users', user.id, { password: p1 });
+        App.showToast("Password updated successfully!", "success");
+        e.target.reset();
+      }
+    }
+  </script>
+</body>
+</html>
